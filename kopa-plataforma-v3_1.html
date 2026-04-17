@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOPA FC — Plataforma 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--lime:#C8F135;--black:#0A0A0A;--dark:#111;--card:#161616;--surface:#1E1E1E;--muted:#555;--white:#F5F5F0;--orange:#FF5E1A;--blue:#4A9EFF;--pink:#FF2D78;--border:rgba(200,241,53,0.1);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Barlow',sans-serif;overflow-x:hidden;}
+button{cursor:pointer;font-family:inherit;}
+input,select,textarea{outline:none;font-family:inherit;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(10,10,10,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;padding:0 20px;gap:0;}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:var(--lime);cursor:pointer;margin-right:20px;flex-shrink:0;}
+.nav-links{display:flex;gap:1px;flex:1;overflow-x:auto;scrollbar-width:none;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 12px;color:var(--muted);background:none;border:none;white-space:nowrap;transition:.2s;position:relative;}
+.nl::after{content:'';position:absolute;bottom:0;left:12px;right:12px;height:2px;background:var(--lime);transform:scaleX(0);transition:.2s;}
+.nl:hover{color:var(--white);}
+.nl.act{color:var(--lime);}
+.nl.act::after{transform:scaleX(1);}
+.nav-r{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;}
+.live-pill{display:none;align-items:center;gap:6px;background:rgba(255,94,26,.15);padding:4px 10px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);animation:blink 1s infinite;}
+.btn-adm{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 12px;background:rgba(200,241,53,.08);color:var(--lime);border:1px solid var(--border);}
+
+/* PÁGINAS */
+.page{display:none;padding-top:60px;min-height:100vh;animation:fadeIn .35s ease both;}
+.page.act{display:block;}
+
+/* UTILIDADES */
+.sec{padding:56px 20px;max-width:1100px;margin:0 auto;}
+.ey{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--lime);margin-bottom:6px;}
+.sh{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,58px);line-height:.9;letter-spacing:-1px;margin-bottom:10px;}
+.sp{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:32px;}
+.btn-p{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:11px 26px;background:var(--lime);color:var(--black);border:none;}
+.btn-p:hover{background:#d4f040;}
+.btn-s{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:11px 26px;background:transparent;color:var(--lime);border:1px solid var(--border);}
+.btn-s:hover{background:rgba(200,241,53,.08);}
+.badge{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;display:inline-block;}
+.bl{background:rgba(200,241,53,.1);color:var(--lime);}
+.bo{background:rgba(255,94,26,.12);color:var(--orange);}
+.bm{background:rgba(255,255,255,.06);color:var(--muted);}
+.bp{background:rgba(255,45,120,.12);color:var(--pink);}
+.empty{padding:40px;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:2px;}
+.ticker-bar{background:var(--lime);padding:8px 0;overflow:hidden;}
+.ticker-track{display:flex;animation:ticker 25s linear infinite;white-space:nowrap;}
+.ti{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:3px;color:var(--black);padding:0 20px;flex-shrink:0;}
+.ti::after{content:' · '}
+.gtab{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:7px 14px;background:var(--card);color:var(--muted);border:none;}
+.gtab.act{background:var(--lime);color:var(--black);}
+.gtabs{display:flex;gap:2px;margin-bottom:16px;flex-wrap:wrap;}
+
+/* HOME HERO */
+.hero{min-height:calc(100vh - 60px);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 20px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;opacity:.04;}
+.hero-bg svg{width:100%;height:100%;}
+.hero-k{position:absolute;right:-60px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(260px,40vw,520px);color:rgba(200,241,53,.025);pointer-events:none;letter-spacing:-10px;line-height:1;}
+.hero-ey{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--lime);margin-bottom:18px;display:flex;align-items:center;gap:10px;justify-content:center;}
+.hero-ey::before,.hero-ey::after{content:'';width:22px;height:2px;background:var(--lime);}
+.hero-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,15vw,180px);line-height:.82;letter-spacing:-5px;margin-bottom:20px;position:relative;}
+.hero-h em{font-style:normal;color:var(--lime);}
+.hero-p{font-size:16px;color:rgba(245,245,240,.48);max-width:460px;line-height:1.75;margin-bottom:40px;position:relative;}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative;margin-bottom:48px;}
+.hero-stats{display:flex;gap:36px;justify-content:center;flex-wrap:wrap;padding-top:28px;border-top:1px solid var(--border);position:relative;}
+.hs-n{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--lime);line-height:1;}
+.hs-l{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+
+/* EN VIVO */
+.ev-block{background:var(--dark);border:1px solid rgba(255,94,26,.2);overflow:hidden;}
+.ev-hdr{background:rgba(255,94,26,.08);padding:11px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,94,26,.1);}
+.ev-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;gap:8px;}
+.ev-min-display{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange);}
+.ev-body{padding:28px 24px;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;}
+.ev-team{display:flex;flex-direction:column;gap:3px;}
+.ev-team.r{text-align:right;align-items:flex-end;}
+.ev-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,3vw,34px);letter-spacing:.5px;}
+.ev-tag{font-size:12px;color:var(--muted);}
+.ev-score-wrap{text-align:center;}
+.ev-score{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,8vw,88px);color:var(--lime);letter-spacing:-3px;line-height:1;}
+.ev-sep{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--muted);margin:0 6px;}
+.ev-fase{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+.ev-off{padding:40px;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:2px;}
+
+/* TORNEOS GRID */
+.torneos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:2px;}
+.t-card{background:var(--card);padding:26px;border-top:3px solid transparent;cursor:pointer;transition:.2s;}
+.t-card:hover{background:var(--surface);border-top-color:var(--lime);}
+.tc-nom{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.5px;margin:10px 0 8px;}
+.tc-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+.tc-stats{display:flex;gap:18px;}
+.tcs-n{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--lime);line-height:1;}
+.tcs-l{font-size:11px;color:var(--muted);}
+
+/* INSCRIPCIÓN */
+.ins-sec{background:var(--lime);padding:68px 20px;text-align:center;position:relative;overflow:hidden;}
+.ins-bg{position:absolute;inset:0;opacity:.05;}
+.ins-bg svg{width:100%;height:100%;}
+.ins-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,7vw,88px);color:var(--black);line-height:.9;letter-spacing:-2px;margin-bottom:14px;position:relative;}
+.ins-p{font-size:16px;color:rgba(10,10,10,.6);max-width:460px;margin:0 auto 28px;line-height:1.75;position:relative;}
+.btn-wa{display:inline-flex;align-items:center;gap:10px;background:var(--black);color:var(--lime);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:13px 28px;text-decoration:none;position:relative;}
+.btn-wa:hover{background:#1a1a0a;}
+.ins-det{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:22px;position:relative;font-size:13px;color:rgba(10,10,10,.5);}
+
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:2px;max-width:800px;}
+.faq-it{background:var(--card);overflow:hidden;}
+.faq-q{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;color:var(--white);transition:background .2s;gap:12px;}
+.faq-q:hover{background:var(--surface);}
+.faq-ico{font-size:22px;color:var(--lime);flex-shrink:0;transition:transform .3s;}
+.faq-it.open .faq-ico{transform:rotate(45deg);}
+.faq-ans{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+.faq-it.open .faq-ans{max-height:300px;}
+.faq-ans p{padding:0 20px 16px;font-size:14px;color:var(--muted);line-height:1.8;border-top:1px solid rgba(255,255,255,.04);}
+.faq-ans p strong{color:var(--lime);}
+
+/* COMENTARIOS */
+.cms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;}
+.cm-card{background:var(--card);padding:22px;}
+.cm-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.cm-av{width:42px;height:42px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--black);flex-shrink:0;}
+.cm-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;}
+.cm-team{font-size:12px;color:var(--muted);}
+.cm-stars{color:var(--lime);font-size:13px;margin-bottom:8px;}
+.cm-txt{font-size:13px;color:rgba(245,245,240,.7);line-height:1.65;}
+.cm-date{font-size:11px;color:var(--muted);margin-top:8px;}
+.cm-form{background:var(--surface);padding:24px;margin-top:20px;max-width:520px;}
+.cmf-t{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--lime);margin-bottom:14px;}
+.fi{width:100%;background:var(--card);border:1px solid rgba(255,255,255,.07);color:var(--white);padding:10px 12px;font-family:'Barlow',sans-serif;font-size:14px;transition:.2s;margin-bottom:10px;}
+.fi:focus{border-color:var(--lime);}
+.fi::placeholder{color:var(--muted);}
+
+/* REDES */
+.redes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px;}
+.red{background:var(--card);padding:26px;display:flex;flex-direction:column;align-items:center;text-align:center;transition:.2s;border-top:3px solid transparent;text-decoration:none;}
+.red:hover{background:var(--surface);}
+.red.ig:hover{border-top-color:#E1306C;}
+.red.tk:hover{border-top-color:#69C9D0;}
+.red.fb:hover{border-top-color:#1877F2;}
+.red.wa:hover{border-top-color:#25D366;}
+.red-ico{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:22px;}
+.ig-ico{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+.tk-ico{background:#000;border:1px solid #222;}
+.fb-ico{background:#1877F2;}
+.wa-ico{background:#25D366;}
+.red-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.red-handle{font-size:13px;color:var(--lime);}
+.red-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+
+/* CTA BAND */
+.cta-band{background:var(--black);padding:72px 20px;text-align:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.cta-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,80px);line-height:.9;letter-spacing:-2px;margin-bottom:14px;}
+.cta-h em{font-style:normal;color:var(--lime);}
+.cta-p{font-size:15px;color:rgba(245,245,240,.42);max-width:440px;margin:0 auto 32px;line-height:1.75;}
+
+/* PARTIDOS */
+.plist{display:flex;flex-direction:column;gap:2px;}
+.p-card{background:var(--card);padding:14px 20px;display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;transition:.2s;}
+.p-card:hover{background:var(--surface);}
+.p-card.live{border-left:3px solid var(--orange);}
+.p-card.done{border-left:3px solid var(--lime);}
+.p-card.pend{border-left:3px solid #222;}
+.p-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.p-name.r{text-align:right;}
+.p-c{text-align:center;}
+.p-score{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--lime);letter-spacing:-2px;line-height:1;}
+.p-vs{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--muted);}
+.p-meta{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding-top:7px;border-top:1px solid rgba(255,255,255,.04);}
+.p-meta-t{font-size:11px;color:var(--muted);}
+.fase-hdr{background:rgba(200,241,53,.05);padding:8px 18px;border-left:3px solid var(--lime);margin-bottom:2px;}
+.fase-hdr-t{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--lime);}
+
+/* EQUIPOS GRID */
+.eq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px;}
+.eq-card{background:var(--card);cursor:pointer;transition:.2s;border-top:2px solid transparent;overflow:hidden;}
+.eq-card:hover{background:var(--surface);border-top-color:var(--lime);}
+.eq-foto{width:100%;aspect-ratio:1;background:var(--surface);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:52px;color:rgba(200,241,53,.1);}
+.eq-foto img{width:100%;height:100%;object-fit:cover;}
+.eq-info{padding:12px;}
+.eq-nom{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:4px;}
+.eq-meta{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.eq-mini{display:flex;gap:10px;font-size:12px;color:var(--muted);}
+.eq-mini span{color:var(--lime);font-weight:700;}
+
+/* EQUIPO DETAIL */
+.eq-detail{background:var(--dark);padding:40px 20px;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;}
+.eqd-foto{width:130px;height:130px;background:var(--surface);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:48px;color:rgba(200,241,53,.12);flex-shrink:0;}
+.eqd-foto img{width:100%;height:100%;object-fit:cover;}
+.eqd-nom{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,64px);letter-spacing:-1px;line-height:.9;margin:8px 0 6px;}
+.eqd-sub{font-size:13px;color:var(--muted);}
+.eqd-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;max-width:1100px;margin:0 auto;padding:0 20px;}
+.edst{background:var(--card);padding:14px;text-align:center;}
+.edst-n{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--lime);line-height:1;}
+.edst-l{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+
+/* CAMPO DE JUEGO */
+.campo-sec{max-width:1100px;margin:0 auto;padding:24px 20px 40px;}
+.campo-layout{display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start;}
+.campo-wrap{position:relative;}
+.campo-svg-area{width:100%;max-width:380px;margin:0 auto;position:relative;}
+.campo-svg-area svg{width:100%;height:auto;display:block;}
+.campo-overlay{position:absolute;top:0;left:0;width:100%;height:100%;}
+.cj{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:transform .2s;text-align:center;}
+.cj:hover{transform:translate(-50%,-50%) scale(1.12);}
+.cj-av{width:44px;height:44px;border-radius:50%;border:2.5px solid var(--lime);overflow:hidden;background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:15px;color:rgba(200,241,53,.2);margin:0 auto;}
+.cj-av img{width:100%;height:100%;object-fit:cover;}
+.cj-num{position:absolute;top:-3px;right:-3px;width:16px;height:16px;background:var(--lime);border-radius:50%;font-family:'Bebas Neue',sans-serif;font-size:10px;color:var(--black);display:flex;align-items:center;justify-content:center;}
+.cj-nom{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--white);background:rgba(10,10,10,.85);padding:2px 4px;margin-top:2px;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sups-box{background:var(--card);padding:18px;}
+.sups-t{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--lime);margin-bottom:12px;}
+.sup-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:.15s;}
+.sup-row:last-child{border:none;}
+.sup-row:hover{background:rgba(200,241,53,.04);}
+.sup-av{width:34px;height:34px;border-radius:50%;background:var(--surface);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:rgba(200,241,53,.2);}
+.sup-av img{width:100%;height:100%;object-fit:cover;}
+.sup-info{flex:1;}
+.sup-nom{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;}
+.sup-pos{font-size:11px;color:var(--muted);}
+
+/* FIFA CARD */
+.fifa-ov{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1100;display:none;align-items:center;justify-content:center;padding:20px;}
+.fifa-ov.open{display:flex;}
+.fifa-inner{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:270px;width:100%;}
+.fifa-card{width:258px;min-height:355px;background:linear-gradient(155deg,#1e2600,#0d1800,#060c00);border:2px solid var(--lime);border-radius:4px;padding:18px 16px 16px;display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden;}
+.fifa-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(200,241,53,.06);}
+.fc-flag{position:absolute;top:10px;right:10px;font-size:16px;}
+.fc-ov{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--lime);line-height:1;align-self:flex-start;position:relative;}
+.fc-pos{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--lime);letter-spacing:3px;align-self:flex-start;margin-bottom:8px;position:relative;}
+.fc-foto{width:106px;height:106px;border-radius:50%;border:3px solid var(--lime);overflow:hidden;background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:32px;color:rgba(200,241,53,.14);margin-bottom:8px;position:relative;}
+.fc-foto img{width:100%;height:100%;object-fit:cover;}
+.fc-nom{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--white);letter-spacing:2px;margin-bottom:2px;text-align:center;position:relative;}
+.fc-club{font-size:10px;color:rgba(200,241,53,.65);letter-spacing:2px;margin-bottom:12px;position:relative;}
+.fc-stats{width:100%;position:relative;}
+.fc-stat-row{display:flex;align-items:center;margin-bottom:4px;gap:6px;}
+.fc-sl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--lime);width:32px;}
+.fc-bar{flex:1;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
+.fc-fill{height:100%;background:var(--lime);border-radius:2px;}
+.fc-val{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--white);width:22px;text-align:right;}
+.btn-dl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:9px 18px;background:var(--lime);color:var(--black);border:none;width:100%;}
+.btn-dl:hover{background:#d4f040;}
+.btn-sh{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:9px 18px;background:transparent;color:var(--lime);border:1px solid var(--border);width:100%;}
+.btn-cfifa{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:none;}
+.btn-cfifa:hover{color:var(--white);}
+
+/* TABLA */
+.tabla-wrap{overflow-x:auto;}
+table.tabla{width:100%;border-collapse:collapse;}
+.tabla thead tr{background:rgba(200,241,53,.07);}
+.tabla th{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--lime);padding:9px 11px;text-align:left;white-space:nowrap;}
+.tabla th.c,.tabla td.c{text-align:center;}
+.tabla tbody tr{background:var(--card);border-bottom:1px solid rgba(255,255,255,.03);transition:.15s;}
+.tabla tbody tr:hover{background:var(--surface);}
+.tabla tbody tr.top2{border-left:3px solid var(--lime);}
+.tabla td{padding:9px 11px;font-size:13px;white-space:nowrap;}
+.t-pos{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--muted);}
+.t-pos.top{color:var(--lime);}
+.t-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.t-pts{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--lime);}
+
+/* GOLEADORES */
+.gol-list{display:flex;flex-direction:column;gap:2px;}
+.gol-row{background:var(--card);padding:12px 18px;display:flex;align-items:center;gap:14px;transition:.15s;}
+.gol-row:hover{background:var(--surface);}
+.gol-rank{font-family:'Bebas Neue',sans-serif;font-size:26px;color:rgba(200,241,53,.2);min-width:30px;}
+.gol-rank.top{color:var(--lime);}
+.gol-av{width:42px;height:42px;border-radius:50%;background:var(--surface);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:15px;color:rgba(200,241,53,.15);}
+.gol-av img{width:100%;height:100%;object-fit:cover;}
+.gol-info{flex:1;}
+.gol-nom{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;}
+.gol-eq{font-size:12px;color:var(--muted);}
+.gol-n{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--lime);line-height:1;}
+.gol-lab{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);}
+
+/* ADMIN */
+.adm-page{display:none;padding-top:60px;min-height:100vh;}
+.adm-page.act{display:block;}
+.adm-login{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 60px);padding:20px;}
+.adm-card{background:var(--card);padding:40px;max-width:360px;width:100%;border:1px solid var(--border);}
+.adm-title{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--lime);letter-spacing:2px;margin-bottom:4px;}
+.adm-sub{font-size:13px;color:var(--muted);margin-bottom:24px;}
+.fl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;}
+.fg{margin-bottom:12px;}
+.adm-panel{display:none;}
+.adm-top{background:rgba(200,241,53,.05);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.adm-top-t{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--lime);}
+.adm-wrap{padding:18px;max-width:1100px;margin:0 auto;}
+.adm-tabs{display:flex;gap:2px;margin-bottom:18px;overflow-x:auto;scrollbar-width:none;}
+.adm-tabs::-webkit-scrollbar{display:none;}
+.atab{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;background:var(--card);color:var(--muted);border:none;white-space:nowrap;}
+.atab.act{background:var(--lime);color:var(--black);}
+.asec{display:none;}
+.asec.act{display:block;}
+.adm-g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.aform{background:var(--card);padding:20px;}
+.aform-t{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--lime);margin-bottom:14px;}
+.arow{background:var(--card);padding:10px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(255,255,255,.03);}
+.ar-av{width:34px;height:34px;background:var(--surface);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:rgba(200,241,53,.15);}
+.ar-av img{width:100%;height:100%;object-fit:cover;}
+.ar-av.rnd{border-radius:50%;}
+.ar-info{flex:1;}
+.ar-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;}
+.ar-meta{font-size:11px;color:var(--muted);}
+.abtn-e{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 9px;background:rgba(200,241,53,.08);color:var(--lime);border:1px solid var(--border);}
+.abtn-d{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 9px;background:rgba(255,94,26,.08);color:var(--orange);border:1px solid rgba(255,94,26,.2);}
+.sc-in{width:52px;background:var(--surface);border:1px solid rgba(255,255,255,.08);color:var(--lime);padding:5px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;}
+.sc-in:focus{border-color:var(--lime);}
+.fs{background:var(--surface);border:1px solid rgba(255,255,255,.07);color:var(--white);padding:6px 9px;font-family:'Barlow',sans-serif;font-size:13px;}
+.fs option{background:var(--dark);}
+.al{padding:9px 13px;margin-bottom:11px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;}
+.a-ok{background:rgba(200,241,53,.1);color:var(--lime);border-left:3px solid var(--lime);}
+.a-err{background:rgba(255,94,26,.1);color:var(--orange);border-left:3px solid var(--orange);}
+.st-ins{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.si label{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--lime);display:block;margin-bottom:3px;}
+.si input{width:100%;background:var(--surface);border:1px solid rgba(255,255,255,.07);color:var(--white);padding:5px;font-family:'Bebas Neue',sans-serif;font-size:18px;text-align:center;}
+.ev-adm{background:var(--card);padding:22px;border:1px solid rgba(255,94,26,.2);}
+.crono-big{font-family:'Bebas Neue',sans-serif;font-size:56px;color:var(--orange);letter-spacing:4px;margin:8px 0;}
+.crono-btns{display:flex;gap:7px;flex-wrap:wrap;}
+.cbt{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:7px 14px;border:none;}
+.cbt.go{background:var(--orange);color:var(--white);}
+.cbt.pa{background:var(--surface);color:var(--white);border:1px solid rgba(255,255,255,.08);}
+.cbt.re{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid rgba(255,255,255,.06);}
+.cbt.ad{background:rgba(200,241,53,.1);color:var(--lime);border:1px solid var(--border);}
+.ev-row{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap;}
+.ev-lab{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);min-width:90px;}
+
+@media(max-width:700px){
+  .adm-g2{grid-template-columns:1fr;}
+  .ev-body{grid-template-columns:1fr;text-align:center;}
+  .ev-team.r{align-items:center;}
+  .eq-detail{grid-template-columns:1fr;text-align:center;}
+  .eqd-foto{margin:0 auto;}
+  .eqd-stats{grid-template-columns:repeat(2,1fr);}
+  .campo-layout{grid-template-columns:1fr;}
+}
+
+/* ════════ FOOTER / PATROCINADORES ════════ */
+.site-footer{background:#0D0D0D;border-top:1px solid var(--border);}
+.footer-sponsors{padding:52px 20px;max-width:1100px;margin:0 auto;}
+.footer-sponsors-ey{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--lime);text-align:center;margin-bottom:8px;}
+.footer-sponsors-h{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:-1px;color:var(--white);text-align:center;margin-bottom:32px;}
+.sponsors-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:2px;}
+.sponsor-slot{background:var(--card);padding:24px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:110px;gap:10px;border:2px dashed rgba(200,241,53,0.12);transition:.2s;position:relative;overflow:hidden;}
+.sponsor-slot:hover{border-color:rgba(200,241,53,0.3);background:var(--surface);}
+.sponsor-slot img{max-width:120px;max-height:56px;object-fit:contain;filter:grayscale(100%) brightness(1.8);transition:filter .3s;}
+.sponsor-slot:hover img{filter:grayscale(0%) brightness(1);}
+.sponsor-slot-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(200,241,53,0.3);}
+.sponsor-slot-placeholder{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.sponsor-placeholder-icon{width:40px;height:40px;border-radius:50%;background:rgba(200,241,53,0.06);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.sponsor-placeholder-txt{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(200,241,53,0.25);text-align:center;}
+.footer-divider{height:1px;background:var(--border);margin:0 20px;}
+.footer-bottom{padding:24px 20px;max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;color:var(--lime);cursor:pointer;}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap;}
+.footer-link{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:.2s;background:none;border:none;}
+.footer-link:hover{color:var(--white);}
+.footer-copy{font-size:12px;color:rgba(85,85,85,.7);}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo" onclick="goTo('home')">KOPA FC®</div>
+  <div class="nav-links">
+    <button class="nl act" onclick="goTo('home')">Home</button>
+    <button class="nl" onclick="goTo('torneo')">Torneo</button>
+    <button class="nl" onclick="goTo('equipos')">Equipos</button>
+    <button class="nl" onclick="goTo('tabla')">Posiciones</button>
+    <button class="nl" onclick="goTo('goleadores')">Goleadores</button>
+  </div>
+  <div class="nav-r">
+    <div class="live-pill" id="nav-live"><div class="live-dot"></div>EN VIVO</div>
+    <button class="btn-adm" onclick="goToAdmin()">Admin</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page act" id="pg-home">
+  <div class="hero">
+    <div class="hero-bg">
+      <svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect x="40" y="20" width="1120" height="660" fill="none" stroke="#C8F135" stroke-width="2"/>
+        <line x1="600" y1="20" x2="600" y2="680" stroke="#C8F135" stroke-width="1.5"/>
+        <circle cx="600" cy="350" r="110" fill="none" stroke="#C8F135" stroke-width="1.5"/>
+        <circle cx="600" cy="350" r="5" fill="#C8F135"/>
+        <rect x="40" y="185" width="185" height="330" fill="none" stroke="#C8F135" stroke-width="1.5"/>
+        <rect x="975" y="185" width="185" height="330" fill="none" stroke="#C8F135" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="hero-k">K</div>
+    <div class="hero-ey">Plataforma deportiva · Cuenca, Ecuador · 2026</div>
+    <h1 class="hero-h">KOPA<br><em>FC®</em></h1>
+    <p class="hero-p">El fútbol amateur de Cuenca, organizado en serio. Resultados en tiempo real.</p>
+    <div class="hero-btns">
+      <button class="btn-p" onclick="goTo('torneo')">Ver Torneo</button>
+      <button class="btn-s" onclick="document.getElementById('ins-sec').scrollIntoView({behavior:'smooth'})">Inscribirse</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hs-n" id="h-eq">0</div><div class="hs-l">Equipos</div></div>
+      <div><div class="hs-n" id="h-pj">0</div><div class="hs-l">Partidos</div></div>
+      <div><div class="hs-n">$600</div><div class="hs-l">Premio</div></div>
+      <div><div class="hs-n" id="h-goles">0</div><div class="hs-l">Goles</div></div>
+    </div>
+  </div>
+  <div class="ticker-bar"><div class="ticker-track" id="ticker-t"></div></div>
+  <div class="sec" style="padding-bottom:0">
+    <div class="ey">Ahora mismo</div>
+    <div class="sh" style="margin-bottom:18px">EN VIVO</div>
+    <div class="ev-block" id="ev-block"><div class="ev-off">No hay partido en curso.</div></div>
+  </div>
+  <div class="sec">
+    <div class="ey">Competencias 2026</div>
+    <div class="sh">TORNEOS KOPA</div>
+    <p class="sp">Todos los torneos del año. Inscríbete y compite.</p>
+    <div class="torneos-grid">
+      <div class="t-card" onclick="goTo('torneo')"><span class="badge bo">ACTIVO</span><div class="tc-nom">KOPA RELÁMPAGO #01</div><div class="tc-desc">16 equipos · Fútbol 7 · Un día · $600 al campeón · Mayo 2026.</div><div class="tc-stats"><div><div class="tcs-n">16</div><div class="tcs-l">Equipos</div></div><div><div class="tcs-n">$600</div><div class="tcs-l">Premio</div></div><div><div class="tcs-n">1</div><div class="tcs-l">Día</div></div></div></div>
+      <div class="t-card"><span class="badge bm">PRÓXIMAMENTE</span><div class="tc-nom">KOPA LIGA #01</div><div class="tc-desc">Liga amateur de 8 semanas. Julio–Agosto 2026, Cuenca.</div><div class="tc-stats"><div><div class="tcs-n">16</div><div class="tcs-l">Equipos</div></div><div><div class="tcs-n">8</div><div class="tcs-l">Semanas</div></div></div></div>
+      <div class="t-card"><span class="badge bm">PRÓXIMAMENTE</span><div class="tc-nom">GRAN KOPA 2026</div><div class="tc-desc">El torneo premium anual. 32 equipos. Diciembre 2026.</div><div class="tc-stats"><div><div class="tcs-n">32</div><div class="tcs-l">Equipos</div></div><div><div class="tcs-n">2</div><div class="tcs-l">Días</div></div></div></div>
+      <div class="t-card"><span class="badge bp">NUEVA CATEGORÍA</span><div class="tc-nom">KOPA FEMENINA #01</div><div class="tc-desc">Primera edición del torneo femenino. Octubre 2026.</div><div class="tc-stats"><div><div class="tcs-n">8</div><div class="tcs-l">Equipos</div></div><div><div class="tcs-n">1</div><div class="tcs-l">Día</div></div></div></div>
+    </div>
+  </div>
+  <div class="ins-sec" id="ins-sec">
+    <div class="ins-bg"><svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect x="20" y="10" width="1160" height="280" fill="none" stroke="#0A0A0A" stroke-width="2"/><line x1="600" y1="10" x2="600" y2="290" stroke="#0A0A0A" stroke-width="1.5"/><circle cx="600" cy="150" r="60" fill="none" stroke="#0A0A0A" stroke-width="1.5"/></svg></div>
+    <div class="ins-h">INSCRIBE TU EQUIPO</div>
+    <p class="ins-p">$60 por equipo. $600 al campeón. Un fin de semana en Cuenca.</p>
+    <a class="btn-wa" id="wa-link" href="https://wa.me/593XXXXXXXXX?text=Hola%20KOPA%20FC!%20Quiero%20inscribir%20mi%20equipo" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.304A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
+      Inscribirse por WhatsApp
+    </a>
+    <div class="ins-det">
+      <span>Max. 15 jugadores</span><span>·</span><span>Confirmacion en 24h</span><span>·</span><span>Solo 16 cupos</span>
+    </div>
+  </div>
+  <div class="cta-band">
+    <div class="cta-h">LISTO PARA<br><em>JUGAR EN SERIO?</em></div>
+    <p class="cta-p">Inscribe tu equipo, compite por $600 y vive la experiencia KOPA.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-p" onclick="document.getElementById('ins-sec').scrollIntoView({behavior:'smooth'})">Inscribirse</button>
+      <button class="btn-s" onclick="goTo('torneo')">Ver fixture</button>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="ey">Síguenos</div>
+    <div class="sh">REDES SOCIALES</div>
+    <div class="redes-grid">
+      <a class="red ig" href="https://instagram.com/kopafutbol" target="_blank"><div class="red-ico ig-ico">📸</div><div class="red-name">Instagram</div><div class="red-handle">@kopafutbol</div><div class="red-sub">Fotos y reels</div></a>
+      <a class="red tk" href="https://tiktok.com/@kopafutbol" target="_blank"><div class="red-ico tk-ico" style="color:#69C9D0;font-weight:900;font-size:18px">TT</div><div class="red-name">TikTok</div><div class="red-handle">@kopafutbol</div><div class="red-sub">Highlights</div></a>
+      <a class="red fb" href="https://facebook.com/kopafutbol" target="_blank"><div class="red-ico fb-ico" style="color:#fff;font-family:'Bebas Neue',sans-serif;font-size:26px">f</div><div class="red-name">Facebook</div><div class="red-handle">KOPA FC</div><div class="red-sub">Resultados</div></a>
+      <a class="red wa" href="https://wa.me/593XXXXXXXXX" target="_blank"><div class="red-ico wa-ico">💬</div><div class="red-name">WhatsApp</div><div class="red-handle">Inscripciones</div><div class="red-sub">Consultas directas</div></a>
+    </div>
+  </div>
+  <div style="background:var(--dark);padding:56px 0">
+    <div class="sec" style="padding:0 20px">
+      <div class="ey">Preguntas frecuentes</div>
+      <div class="sh" style="margin-bottom:24px">FAQ</div>
+      <div class="faq-list">
+        <div class="faq-it"><div class="faq-q" onclick="faqT(this)">Cuanto cuesta inscribir mi equipo? <div class="faq-ico">+</div></div><div class="faq-ans"><p><strong>$60 por equipo</strong> (max. 15 jugadores). Si son 12, son $5 por persona para competir por $600.</p></div></div>
+        <div class="faq-it"><div class="faq-q" onclick="faqT(this)">Como funciona el torneo relampago? <div class="faq-ico">+</div></div><div class="faq-ans"><p>Un solo dia. 16 equipos en 4 grupos de 4. Los 2 primeros de cada grupo avanzan a cuartos, semis y final. Futbol 7, 20 minutos por tiempo.</p></div></div>
+        <div class="faq-it"><div class="faq-q" onclick="faqT(this)">Que incluye la inscripcion? <div class="faq-ico">+</div></div><div class="faq-ans"><p>Arbitro profesional, fotografo el dia del torneo, <strong>ficha digital tipo FIFA</strong> por jugador, tabla en tiempo real, reel del torneo y ceremonia de premiacion.</p></div></div>
+        <div class="faq-it"><div class="faq-q" onclick="faqT(this)">Cuantos jugadores por equipo? <div class="faq-ico">+</div></div><div class="faq-ans"><p>Minimo 7 y maximo 15. Recomendamos entre 10 y 12 para tener suplentes durante el dia.</p></div></div>
+        <div class="faq-it"><div class="faq-q" onclick="faqT(this)">Como se paga el premio? <div class="faq-ico">+</div></div><div class="faq-ans"><p><strong>$600 en efectivo</strong> al equipo campeon en la ceremonia de premiacion inmediatamente.</p></div></div>
+        <div class="faq-it"><div class="faq-q" onclick="faqT(this)">Como sigo los resultados en tiempo real? <div class="faq-ico">+</div></div><div class="faq-ans"><p>Desde esta plataforma en tu celular. Tambien publicamos en Instagram y WhatsApp.</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="ey">Lo que dicen</div>
+    <div class="sh">COMENTARIOS</div>
+    <div class="cms-grid" id="cm-grid"></div>
+    <div class="cm-form">
+      <div class="cmf-t">Deja tu comentario</div>
+      <input class="fi" id="cm-nom" placeholder="Tu nombre"/>
+      <input class="fi" id="cm-eq" placeholder="Tu equipo (opcional)"/>
+      <div style="display:flex;gap:5px;margin-bottom:10px" id="stars-sel">
+        <span style="font-size:22px;cursor:pointer;color:var(--muted)" onclick="setStars(1)">&#9733;</span>
+        <span style="font-size:22px;cursor:pointer;color:var(--muted)" onclick="setStars(2)">&#9733;</span>
+        <span style="font-size:22px;cursor:pointer;color:var(--muted)" onclick="setStars(3)">&#9733;</span>
+        <span style="font-size:22px;cursor:pointer;color:var(--muted)" onclick="setStars(4)">&#9733;</span>
+        <span style="font-size:22px;cursor:pointer;color:var(--muted)" onclick="setStars(5)">&#9733;</span>
+      </div>
+      <textarea class="fi" id="cm-txt" rows="3" placeholder="Como fue tu experiencia en KOPA?"></textarea>
+      <button class="btn-p" onclick="enviarCm()">Publicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TORNEO -->
+<div class="page" id="pg-torneo">
+  <div class="sec">
+    <div class="ey">KOPA · Mayo 2026</div>
+    <div class="sh">TORNEO RELAMPAGO #01</div>
+    <p class="sp">16 equipos · Futbol 7 · Un dia · $600 al campeon</p>
+    <div class="gtabs" id="torneo-tabs">
+      <button class="gtab act" onclick="filtroF('todos',this)">Todos</button>
+      <button class="gtab" onclick="filtroF('Grupo A',this)">Grupo A</button>
+      <button class="gtab" onclick="filtroF('Grupo B',this)">Grupo B</button>
+      <button class="gtab" onclick="filtroF('Grupo C',this)">Grupo C</button>
+      <button class="gtab" onclick="filtroF('Grupo D',this)">Grupo D</button>
+      <button class="gtab" onclick="filtroF('Cuartos',this)">Cuartos</button>
+      <button class="gtab" onclick="filtroF('Semis',this)">Semis</button>
+      <button class="gtab" onclick="filtroF('Final',this)">Final</button>
+    </div>
+    <div class="plist" id="fixture-list"></div>
+  </div>
+</div>
+
+<!-- EQUIPOS -->
+<div class="page" id="pg-equipos">
+  <div class="sec">
+    <div class="ey">Torneo Relampago #01</div>
+    <div class="sh">EQUIPOS</div>
+    <div class="gtabs">
+      <button class="gtab act" onclick="filtroEq('todos',this)">Todos</button>
+      <button class="gtab" onclick="filtroEq('A',this)">Grupo A</button>
+      <button class="gtab" onclick="filtroEq('B',this)">Grupo B</button>
+      <button class="gtab" onclick="filtroEq('C',this)">Grupo C</button>
+      <button class="gtab" onclick="filtroEq('D',this)">Grupo D</button>
+    </div>
+    <div class="eq-grid" id="eq-grid"></div>
+  </div>
+</div>
+
+<!-- EQUIPO DETALLE -->
+<div class="page" id="pg-equipo-det">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="eq-detail">
+      <div class="eqd-foto" id="eqd-foto">K</div>
+      <div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <span class="badge bl" id="eqd-grupo">Grupo A</span>
+          <button class="badge bm" onclick="goTo('equipos')" style="cursor:pointer">← Equipos</button>
+        </div>
+        <div class="eqd-nom" id="eqd-nom">Equipo</div>
+        <div class="eqd-sub" id="eqd-cap"></div>
+        <div id="eqd-desc" style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.6"></div>
+      </div>
+    </div>
+    <div class="eqd-stats" id="eqd-stats"></div>
+  </div>
+  <div class="campo-sec">
+    <div class="ey">Alineacion</div>
+    <div class="sh" style="margin-bottom:18px">CAMPO DE JUEGO</div>
+    <div class="campo-layout">
+      <div class="campo-wrap">
+        <div class="campo-svg-area">
+          <svg viewBox="0 0 300 440" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="440" fill="#1a5c1a"/>
+            <rect x="0" y="0" width="300" height="40" fill="#1d651d" opacity=".4"/>
+            <rect x="0" y="80" width="300" height="40" fill="#1d651d" opacity=".4"/>
+            <rect x="0" y="160" width="300" height="40" fill="#1d651d" opacity=".4"/>
+            <rect x="0" y="240" width="300" height="40" fill="#1d651d" opacity=".4"/>
+            <rect x="0" y="320" width="300" height="40" fill="#1d651d" opacity=".4"/>
+            <rect x="0" y="400" width="300" height="40" fill="#1d651d" opacity=".4"/>
+            <rect x="12" y="12" width="276" height="416" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2"/>
+            <line x1="12" y1="220" x2="288" y2="220" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+            <circle cx="150" cy="220" r="44" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+            <circle cx="150" cy="220" r="3" fill="rgba(255,255,255,.7)"/>
+            <rect x="62" y="12" width="176" height="72" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+            <rect x="102" y="12" width="96" height="34" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+            <rect x="122" y="6" width="56" height="10" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
+            <path d="M100 84 Q150 110 200 84" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+            <rect x="62" y="356" width="176" height="72" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+            <rect x="102" y="394" width="96" height="34" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+            <rect x="122" y="424" width="56" height="10" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
+            <path d="M100 356 Q150 330 200 356" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+            <circle cx="150" cy="60" r="2.5" fill="rgba(255,255,255,.7)"/>
+            <circle cx="150" cy="380" r="2.5" fill="rgba(255,255,255,.7)"/>
+          </svg>
+          <div class="campo-overlay" id="campo-jugs"></div>
+        </div>
+      </div>
+      <div>
+        <div class="sups-box">
+          <div class="sups-t">Suplentes</div>
+          <div id="sups-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABLA -->
+<div class="page" id="pg-tabla">
+  <div class="sec">
+    <div class="ey">Clasificacion</div>
+    <div class="sh">TABLA DE POSICIONES</div>
+    <div class="gtabs">
+      <button class="gtab act" onclick="showGrupo('A',this)">Grupo A</button>
+      <button class="gtab" onclick="showGrupo('B',this)">Grupo B</button>
+      <button class="gtab" onclick="showGrupo('C',this)">Grupo C</button>
+      <button class="gtab" onclick="showGrupo('D',this)">Grupo D</button>
+    </div>
+    <div class="tabla-wrap" id="tabla-cont"></div>
+    <div style="margin-top:12px;padding:11px 14px;background:rgba(200,241,53,.04);border-left:2px solid rgba(200,241,53,.2);font-size:12px;color:var(--muted)">
+      Top 2 de cada grupo clasifican a cuartos · V=3pts · E=1pt · D=0pts
+    </div>
+  </div>
+</div>
+
+<!-- GOLEADORES -->
+<div class="page" id="pg-goleadores">
+  <div class="sec">
+    <div class="ey">Estadisticas</div>
+    <div class="sh">GOLEADORES</div>
+    <div class="gol-list" id="gol-list"></div>
+  </div>
+</div>
+
+<!-- FIFA OVERLAY -->
+<div class="fifa-ov" id="fifa-ov" onclick="if(event.target===this)cerrarFifa()">
+  <div class="fifa-inner">
+    <div id="fifa-render"></div>
+    <button class="btn-dl" onclick="descargarFifa()">Descargar ficha</button>
+    <button class="btn-sh" onclick="compartirFifa()">Compartir</button>
+    <button class="btn-cfifa" onclick="cerrarFifa()">Cerrar</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="adm-page" id="pg-admin">
+  <div class="adm-login" id="adm-login">
+    <div class="adm-card">
+      <div class="adm-title">ADMIN</div>
+      <div class="adm-sub">Panel organizador KOPA FC 2026</div>
+      <div id="login-al"></div>
+      <div class="fg"><label class="fl">Contrasena</label><input type="password" class="fi" id="login-pw" placeholder="......" onkeydown="if(event.key==='Enter')tryLogin()"/></div>
+      <button class="btn-p" style="width:100%" onclick="tryLogin()">Ingresar</button>
+    </div>
+  </div>
+  <div class="adm-panel" id="adm-panel">
+    <div class="adm-top">
+      <div class="adm-top-t">Panel organizador · KOPA FC 2026</div>
+      <button onclick="doLogout()" style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;background:rgba(255,255,255,.04);color:var(--muted);border:1px solid rgba(255,255,255,.07)">Cerrar sesion</button>
+    </div>
+    <div class="adm-wrap">
+      <div id="gadm-al"></div>
+      <div class="adm-tabs">
+        <button class="atab act" onclick="aTab('envivo',this)">En Vivo</button>
+        <button class="atab" onclick="aTab('equipos',this)">Equipos</button>
+        <button class="atab" onclick="aTab('jugadores',this)">Jugadores</button>
+        <button class="atab" onclick="aTab('partidos',this)">Partidos</button>
+        <button class="atab" onclick="aTab('goles',this)">Goleadores</button>
+        <button class="atab" onclick="aTab('config',this)">Config</button>
+      </div>
+
+      <!-- EN VIVO -->
+      <div class="asec act" id="asec-envivo">
+        <div class="ev-adm">
+          <div class="aform-t" style="color:var(--orange)">Control de partido en vivo</div>
+          <div class="ev-row"><div class="ev-lab">Estado</div>
+            <select class="fi fs" id="ev-est" style="width:170px" onchange="syncPill()">
+              <option value="off">Sin partido</option>
+              <option value="live">EN VIVO</option>
+              <option value="medio">Medio tiempo</option>
+              <option value="fin">Finalizado</option>
+            </select></div>
+          <div class="ev-row"><div class="ev-lab">Local</div><select class="fi fs" id="ev-loc" style="width:210px"></select></div>
+          <div class="ev-row"><div class="ev-lab">Visitante</div><select class="fi fs" id="ev-vis" style="width:210px"></select></div>
+          <div class="ev-row"><div class="ev-lab">Marcador</div>
+            <input class="sc-in" id="ev-gl" type="number" min="0" value="0"/>
+            <span style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--muted);margin:0 3px">-</span>
+            <input class="sc-in" id="ev-gv" type="number" min="0" value="0"/></div>
+          <div class="ev-row"><div class="ev-lab">Fase</div><input class="fi" id="ev-fase" placeholder="Ej: Grupo A J1" style="width:200px"/></div>
+          <div class="ev-row"><div class="ev-lab">Minuto</div><input class="fi" id="ev-min" type="number" min="0" max="90" value="0" style="width:70px;font-family:'Bebas Neue',sans-serif;font-size:18px;text-align:center" oninput="syncCrono()"/></div>
+          <div class="crono-big" id="crono-big">00'</div>
+          <div class="crono-btns">
+            <button class="cbt go" onclick="cronoStart()">Iniciar</button>
+            <button class="cbt pa" onclick="cronoPause()">Pausar</button>
+            <button class="cbt re" onclick="cronoReset()">Reset</button>
+            <button class="cbt ad" onclick="cronoAdd(5)">+5'</button>
+            <button class="cbt ad" onclick="cronoAdd(10)">+10'</button>
+            <button class="cbt ad" onclick="cronoAdd(45)">45'</button>
+          </div>
+          <button class="btn-p" style="margin-top:14px" onclick="guardarEV()">Publicar en vivo</button>
+        </div>
+      </div>
+
+      <!-- EQUIPOS -->
+      <div class="asec" id="asec-equipos">
+        <div class="adm-g2">
+          <div>
+            <div class="aform">
+              <div class="aform-t" id="eqf-t">Agregar equipo</div>
+              <input type="hidden" id="eq-eid"/>
+              <div class="fg"><label class="fl">Nombre</label><input class="fi" id="eq-nom" placeholder="Los Fenomenos"/></div>
+              <div class="fg"><label class="fl">Grupo</label><select class="fi fs" id="eq-gru" style="width:100%"><option value="A">Grupo A</option><option value="B">Grupo B</option><option value="C">Grupo C</option><option value="D">Grupo D</option></select></div>
+              <div class="fg"><label class="fl">Capitan</label><input class="fi" id="eq-cap" placeholder="Nombre del capitan"/></div>
+              <div class="fg"><label class="fl">Descripcion</label><textarea class="fi" id="eq-desc" rows="2" placeholder="Info del equipo..."></textarea></div>
+              <div class="fg"><label class="fl">URL foto</label><input class="fi" id="eq-foto" placeholder="https://..."/></div>
+              <div class="fg"><label class="fl">O subir foto</label><input type="file" class="fi" id="eq-ffile" accept="image/*" style="padding:5px" onchange="prevEqFoto(this)"/></div>
+              <div id="eq-fp" style="display:none;margin-bottom:9px"><img id="eq-fpimg" style="width:100%;max-height:130px;object-fit:cover"/></div>
+              <div id="eqf-al"></div>
+              <div style="display:flex;gap:7px"><button class="btn-p" style="flex:1" onclick="guardarEq()">Guardar</button><button class="btn-s" onclick="resetEq()">Limpiar</button></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--lime);margin-bottom:10px">Equipos (<span id="eq-cnt">0</span>/16)</div>
+            <div id="adm-eq-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JUGADORES -->
+      <div class="asec" id="asec-jugadores">
+        <div class="adm-g2">
+          <div>
+            <div class="aform">
+              <div class="aform-t" id="jugf-t">Agregar jugador</div>
+              <input type="hidden" id="jug-jid"/>
+              <div class="fg"><label class="fl">Nombre</label><input class="fi" id="jug-nom" placeholder="Carlos Rodriguez"/></div>
+              <div class="fg"><label class="fl">Equipo</label><select class="fi fs" id="jug-eq" style="width:100%"></select></div>
+              <div class="fg"><label class="fl">Posicion</label>
+                <select class="fi fs" id="jug-pos" style="width:100%" onchange="adaptStats()">
+                  <option value="Portero">Portero</option>
+                  <option value="Defensa">Defensa</option>
+                  <option value="Lateral">Lateral</option>
+                  <option value="Mediocampo">Mediocampo</option>
+                  <option value="Delantero">Delantero</option>
+                </select></div>
+              <div class="fg"><label class="fl">Rol</label><select class="fi fs" id="jug-rol" style="width:100%"><option value="titular">Titular</option><option value="suplente">Suplente</option></select></div>
+              <div class="fg"><label class="fl">Numero</label><input class="fi" id="jug-num" type="number" min="1" max="99" placeholder="10" style="width:80px"/></div>
+              <div class="fg"><label class="fl">URL foto</label><input class="fi" id="jug-foto" placeholder="https://..."/></div>
+              <div class="fg"><label class="fl">O subir foto</label><input type="file" class="fi" id="jug-ffile" accept="image/*" style="padding:5px" onchange="prevJugFoto(this)"/></div>
+              <div id="jug-fp" style="display:none;margin-bottom:9px"><img id="jug-fpimg" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--lime)"/></div>
+              <div class="ey" style="margin-bottom:7px">Estadisticas</div>
+              <div class="st-ins" id="st-ins">
+                <div class="si"><label id="sl0">RIT</label><input class="fi" id="s0" type="number" min="0" max="99" value="70"/></div>
+                <div class="si"><label id="sl1">TIR</label><input class="fi" id="s1" type="number" min="0" max="99" value="70"/></div>
+                <div class="si"><label id="sl2">PAS</label><input class="fi" id="s2" type="number" min="0" max="99" value="70"/></div>
+                <div class="si"><label id="sl3">REG</label><input class="fi" id="s3" type="number" min="0" max="99" value="70"/></div>
+                <div class="si"><label id="sl4">DEF</label><input class="fi" id="s4" type="number" min="0" max="99" value="70"/></div>
+                <div class="si"><label id="sl5">FIS</label><input class="fi" id="s5" type="number" min="0" max="99" value="70"/></div>
+              </div>
+              <div id="jugf-al" style="margin-top:9px"></div>
+              <div style="display:flex;gap:7px;margin-top:11px"><button class="btn-p" style="flex:1" onclick="guardarJug()">Guardar</button><button class="btn-s" onclick="resetJug()">Limpiar</button></div>
+            </div>
+          </div>
+          <div>
+            <div class="fg"><label class="fl">Filtrar equipo</label><select class="fi fs" id="jug-filtro" style="width:100%" onchange="renderAdmJugs()"><option value="">Todos</option></select></div>
+            <div id="adm-jug-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARTIDOS -->
+      <div class="asec" id="asec-partidos">
+        <div class="aform" style="margin-bottom:13px">
+          <div class="aform-t">Agregar partido</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:flex-end">
+            <div><label class="fl">Local</label><select class="fi fs" id="p-loc" style="width:170px"></select></div>
+            <div style="align-self:flex-end;padding-bottom:7px;font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted)">vs</div>
+            <div><label class="fl">Visitante</label><select class="fi fs" id="p-vis" style="width:170px"></select></div>
+            <div><label class="fl">Fase</label><select class="fi fs" id="p-fas"><option>Grupo A</option><option>Grupo B</option><option>Grupo C</option><option>Grupo D</option><option>Cuartos</option><option>Semis</option><option>Final</option></select></div>
+            <div><label class="fl">Hora</label><input class="fi" id="p-hor" placeholder="09:00" style="width:75px"/></div>
+            <button class="btn-p" onclick="addPartido()">+ Agregar</button>
+          </div>
+        </div>
+        <div id="adm-partidos-list"></div>
+      </div>
+
+      <!-- GOLES -->
+      <div class="asec" id="asec-goles">
+        <div class="aform" style="margin-bottom:13px">
+          <div class="aform-t">Registrar gol</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:flex-end">
+            <div><label class="fl">Jugador</label><input class="fi" id="gol-jug" placeholder="Nombre" style="width:190px"/></div>
+            <div><label class="fl">Equipo</label><select class="fi fs" id="gol-eq" style="width:170px"></select></div>
+            <button class="btn-p" onclick="addGol()">+1 Gol</button>
+          </div>
+        </div>
+        <div id="adm-gol-list"></div>
+      </div>
+
+      <!-- CONFIG -->
+      <div class="asec" id="asec-config">
+        <div class="aform" style="max-width:460px">
+          <div class="aform-t">Configuracion</div>
+          <div class="fg"><label class="fl">WhatsApp (sin +)</label><input class="fi" id="cfg-wa" placeholder="593XXXXXXXXX"/></div>
+          <div class="fg"><label class="fl">Nombre del torneo</label><input class="fi" id="cfg-nom" value="KOPA Relampago #01"/></div>
+          <div class="fg"><label class="fl">Premio</label><input class="fi" id="cfg-pre" value="$600"/></div>
+          <div class="fg"><label class="fl">Nueva contrasena</label><input type="password" class="fi" id="cfg-pw" placeholder="Vacio = no cambiar"/></div>
+          <button class="btn-p" onclick="guardarCfg()">Guardar</button>
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.05)">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:8px">Zona peligrosa</div>
+            <button onclick="resetTodo()" style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 13px;background:rgba(255,94,26,.08);color:var(--orange);border:1px solid rgba(255,94,26,.2)">Borrar todos los datos</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+var S;
+function gs(){try{return JSON.parse(localStorage.getItem('kopa26'))||ds();}catch(e){return ds();}}
+function ds(){return{pw:'kopa2026',cfg:{wa:'593XXXXXXXXX',nom:'KOPA Relampago #01',pre:'$600'},equipos:[],jugadores:[],partidos:[],goleadores:[],comentarios:[],envivo:{est:'off',local:'',visita:'',gl:0,gv:0,min:0,fase:''},loggedIn:false};}
+function ss(d){localStorage.setItem('kopa26',JSON.stringify(d));}
+S=gs();
+
+var PUB=['home','torneo','equipos','tabla','goleadores'];
+function goTo(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('act');});
+  document.querySelectorAll('.adm-page').forEach(function(p){p.classList.remove('act');});
+  var pg=document.getElementById('pg-'+id);
+  if(pg){pg.classList.add('act');}
+  document.querySelectorAll('.nl').forEach(function(b,i){b.classList.toggle('act',PUB[i]===id);});
+  window.scrollTo(0,0);
+  S=gs();
+  if(id==='home') renderHome();
+  if(id==='torneo') renderFixture('todos');
+  if(id==='equipos') renderEquipos('todos');
+  if(id==='tabla') renderTabla('A');
+  if(id==='goleadores') renderGoles();
+}
+
+function goToAdmin(){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('act');});
+  document.getElementById('pg-admin').classList.add('act');
+  S=gs();
+  if(S.loggedIn){showPanel();}
+  else{document.getElementById('adm-login').style.display='flex';document.getElementById('adm-panel').style.display='none';}
+}
+
+function goToEqDet(nombre){
+  S=gs();
+  var eq=null;
+  for(var i=0;i<S.equipos.length;i++){if(S.equipos[i].nombre===nombre){eq=S.equipos[i];break;}}
+  if(!eq)return;
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('act');});
+  document.getElementById('pg-equipo-det').classList.add('act');
+  window.scrollTo(0,0);
+  renderEqDet(eq);
+}
+
+/* HOME */
+function renderHome(){
+  S=gs();
+  var pj=0;
+  for(var i=0;i<S.partidos.length;i++){if(S.partidos[i].est==='done')pj++;}
+  var goles=0;
+  for(var i=0;i<S.goleadores.length;i++){goles+=S.goleadores[i].goles;}
+  var heq=document.getElementById('h-eq');if(heq)heq.textContent=S.equipos.length;
+  var hpj=document.getElementById('h-pj');if(hpj)hpj.textContent=pj;
+  var hg=document.getElementById('h-goles');if(hg)hg.textContent=goles;
+  renderEV();renderTicker();renderCms();updateWa();
+}
+
+function updateWa(){
+  S=gs();
+  var wa=S.cfg&&S.cfg.wa?S.cfg.wa:'593XXXXXXXXX';
+  var el=document.getElementById('wa-link');
+  if(el)el.href='https://wa.me/'+wa+'?text=Hola%20KOPA%20FC!%20Quiero%20inscribir%20mi%20equipo';
+}
+
+function renderTicker(){
+  S=gs();
+  var done=[];
+  for(var i=0;i<S.partidos.length;i++){if(S.partidos[i].est==='done')done.push(S.partidos[i]);}
+  var html='';
+  if(done.length>0){
+    var items=done.slice(-8);
+    for(var i=0;i<2;i++){for(var j=0;j<items.length;j++){html+='<div class="ti">'+items[j].local+' '+items[j].gl+'-'+items[j].gv+' '+items[j].visita+'</div>';}}
+  } else {
+    var def=['KOPA FC','Torneo Relampago #01','Mayo 2026 Cuenca','$600 Al Campeon','16 Equipos','@kopafutbol'];
+    for(var i=0;i<2;i++){for(var j=0;j<def.length;j++){html+='<div class="ti">'+def[j]+'</div>';}}
+  }
+  var t=document.getElementById('ticker-t');if(t)t.innerHTML=html;
+}
+
+function renderEV(){
+  S=gs();
+  var ev=S.envivo||{};
+  var block=document.getElementById('ev-block');
+  if(!block)return;
+  var pill=document.getElementById('nav-live');
+  if(!ev||ev.est==='off'||!ev.local){
+    block.innerHTML='<div class="ev-off">No hay partido en curso.</div>';
+    if(pill)pill.style.display='none';return;
+  }
+  if(pill)pill.style.display='flex';
+  var lbl={live:'En Juego',medio:'Medio Tiempo',fin:'Finalizado'}[ev.est]||ev.est;
+  var col=ev.est==='live'?'var(--orange)':ev.est==='fin'?'var(--lime)':'var(--muted)';
+  block.innerHTML='<div class="ev-hdr"><div class="ev-title"><div class="live-dot" style="background:'+col+'"></div>'+lbl+' - '+ev.fase+'</div><div class="ev-min-display">'+String(ev.min||0).padStart(2,'0')+"'</div></div><div class=\"ev-body\"><div class=\"ev-team\"><div class=\"ev-name\">"+ev.local+'</div><div class="ev-tag">Local</div></div><div class="ev-score-wrap"><div class="ev-score">'+ev.gl+'<span class="ev-sep">-</span>'+ev.gv+'</div><div class="ev-fase">'+ev.fase+'</div></div><div class="ev-team r"><div class="ev-name">'+ev.visita+'</div><div class="ev-tag">Visitante</div></div></div>';
+}
+
+/* COMENTARIOS */
+var CM_BASE=[
+  {nombre:'Carlos R.',equipo:'Los Fenomenos',rating:5,texto:'El mejor torneo de Cuenca! Organizacion increible, arbitro profesional y las fotos quedaron epicas.',fecha:'Mayo 2026'},
+  {nombre:'Andres M.',equipo:'Barrio Norte FC',rating:5,texto:'KOPA FC es otro nivel. Todo online, el carnet digital esta buenazo.',fecha:'Mayo 2026'},
+  {nombre:'Diego V.',equipo:'La Garra',rating:4,texto:'Muy bien organizado, los resultados en vivo son un detalle genial.',fecha:'Mayo 2026'},
+  {nombre:'Luis P.',equipo:'El Combo',rating:5,texto:'$5 por jugador para tener una experiencia asi? Vale cada centavo.',fecha:'Mayo 2026'},
+];
+var cmRating=5;
+function setStars(n){
+  cmRating=n;
+  var stars=document.querySelectorAll('#stars-sel span');
+  for(var i=0;i<stars.length;i++){stars[i].style.color=i<n?'var(--lime)':'var(--muted)';}
+}
+function enviarCm(){
+  var nom=document.getElementById('cm-nom').value.trim();
+  var txt=document.getElementById('cm-txt').value.trim();
+  if(!nom||!txt){alert('Completa nombre y comentario.');return;}
+  S=gs();if(!S.comentarios)S.comentarios=[];
+  S.comentarios.unshift({nombre:nom,equipo:document.getElementById('cm-eq').value.trim(),texto:txt,rating:cmRating,fecha:new Date().toLocaleDateString('es-EC')});
+  ss(S);
+  document.getElementById('cm-nom').value='';
+  document.getElementById('cm-eq').value='';
+  document.getElementById('cm-txt').value='';
+  renderCms();alert('Gracias por tu comentario!');
+}
+function renderCms(){
+  S=gs();
+  var todos=CM_BASE.concat(S.comentarios||[]);
+  var cont=document.getElementById('cm-grid');if(!cont)return;
+  var html='';
+  for(var i=0;i<todos.length;i++){
+    var c=todos[i];
+    var stars='';for(var j=0;j<5;j++){stars+=j<(c.rating||5)?'&#9733;':'&#9734;';}
+    html+='<div class="cm-card"><div class="cm-hdr"><div class="cm-av">'+c.nombre.charAt(0)+'</div><div><div class="cm-name">'+c.nombre+'</div><div class="cm-team">'+(c.equipo||'Jugador KOPA')+'</div></div></div><div class="cm-stars">'+stars+'</div><div class="cm-txt">'+c.texto+'</div><div class="cm-date">'+(c.fecha||'')+'</div></div>';
+  }
+  cont.innerHTML=html;
+}
+
+function faqT(qEl){
+  var it=qEl.parentElement;
+  var wasOpen=it.classList.contains('open');
+  document.querySelectorAll('.faq-it').forEach(function(x){x.classList.remove('open');});
+  if(!wasOpen)it.classList.add('open');
+}
+
+/* FIXTURE */
+function renderFixture(fase){
+  S=gs();
+  var pts=S.partidos;
+  if(fase!=='todos'){var tmp=[];for(var i=0;i<pts.length;i++){if(pts[i].fase===fase)tmp.push(pts[i]);}pts=tmp;}
+  var list=document.getElementById('fixture-list');
+  if(!pts.length){list.innerHTML='<div class="empty">SIN PARTIDOS EN EL FIXTURE</div>';return;}
+  var fases=[];var seen={};for(var i=0;i<pts.length;i++){if(!seen[pts[i].fase]){fases.push(pts[i].fase);seen[pts[i].fase]=1;}}
+  var html='';
+  for(var f=0;f<fases.length;f++){
+    var faseNom=fases[f];
+    html+='<div class="fase-hdr"><div class="fase-hdr-t">'+faseNom+'</div></div>';
+    for(var i=0;i<pts.length;i++){if(pts[i].fase===faseNom)html+=renderPCard(pts[i]);}
+  }
+  list.innerHTML=html;
+}
+
+function filtroF(fase,btn){
+  document.querySelectorAll('#torneo-tabs .gtab').forEach(function(b){b.classList.remove('act');});
+  btn.classList.add('act');renderFixture(fase);
+}
+
+function renderPCard(p){
+  var cls=p.est==='done'?'done':p.est==='live'?'live':'pend';
+  var sc=p.est!=='pend'?('<div class="p-score">'+p.gl+'<span style="font-size:22px;color:var(--muted);margin:0 3px">-</span>'+p.gv+'</div>'):'<div class="p-vs">vs</div>';
+  var badge=p.est==='done'?'<span class="badge bl">Finalizado</span>':p.est==='live'?'<span class="badge bo">EN VIVO</span>':'<span class="badge bm">Pendiente</span>';
+  return '<div class="p-card '+cls+'"><div class="p-name r">'+p.local+'</div><div class="p-c">'+sc+'<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:11px;color:var(--muted);text-align:center;margin-top:3px">'+(p.hora||'')+'</div></div><div class="p-name">'+p.visita+'</div><div class="p-meta"><div class="p-meta-t">'+p.fase+'</div>'+badge+'</div></div>';
+}
+
+/* EQUIPOS */
+function renderEquipos(g){
+  S=gs();
+  var eqs=S.equipos;
+  if(g!=='todos'){var tmp=[];for(var i=0;i<eqs.length;i++){if(eqs[i].grupo===g)tmp.push(eqs[i]);}eqs=tmp;}
+  var grid=document.getElementById('eq-grid');
+  if(!eqs.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">SIN EQUIPOS REGISTRADOS</div>';return;}
+  var html='';
+  for(var i=0;i<eqs.length;i++){
+    var e=eqs[i];
+    var st=calcSt(e.nombre);
+    var fotoHtml=e.foto?('<img src="'+e.foto+'" alt="'+e.nombre+'" onerror="this.style.display=\'none\'">'):e.nombre.charAt(0);
+    var gcols={A:'rgba(200,241,53,.1)',B:'rgba(255,94,26,.1)',C:'rgba(74,158,255,.1)',D:'rgba(255,45,120,.1)'};
+    var gtcols={A:'var(--lime)',B:'var(--orange)',C:'var(--blue)',D:'var(--pink)'};
+    html+='<div class="eq-card" onclick="goToEqDet(\''+e.nombre.replace(/'/g,"\\'")+'\')">';
+    html+='<div class="eq-foto">'+fotoHtml+'</div>';
+    html+='<div class="eq-info"><div class="eq-nom">'+e.nombre+'</div>';
+    html+='<div class="eq-meta"><span style="background:'+(gcols[e.grupo]||'rgba(255,255,255,.05)')+';color:'+(gtcols[e.grupo]||'var(--muted)')+';font-family:\'Barlow Condensed\',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 7px;display:inline-block;margin-bottom:3px">Grupo '+e.grupo+'</span></div>';
+    html+='<div class="eq-mini"><div class="ems">PJ <span>'+st.pj+'</span></div><div class="ems">V <span>'+st.v+'</span></div><div class="ems">PTS <span>'+st.pts+'</span></div></div>';
+    html+='</div></div>';
+  }
+  grid.innerHTML=html;
+}
+
+function filtroEq(g,btn){
+  document.querySelectorAll('#pg-equipos .gtab').forEach(function(b){b.classList.remove('act');});
+  btn.classList.add('act');renderEquipos(g);
+}
+
+/* EQUIPO DETAIL */
+var POS_COORDS={
+  'Portero':  [{x:50,y:88}],
+  'Defensa':  [{x:25,y:72},{x:50,y:67},{x:75,y:72}],
+  'Lateral':  [{x:9,y:58},{x:91,y:58}],
+  'Mediocampo':[{x:25,y:46},{x:50,y:42},{x:75,y:46}],
+  'Delantero':[{x:35,y:26},{x:65,y:26}]
+};
+var POS_ORDER=['Portero','Defensa','Lateral','Mediocampo','Delantero'];
+
+function renderEqDet(eq){
+  S=gs();
+  var fd=document.getElementById('eqd-foto');
+  if(eq.foto){fd.innerHTML='<img src="'+eq.foto+'" style="width:100%;height:100%;object-fit:cover" onerror="this.innerHTML=\''+eq.nombre.charAt(0)+'\'">';}
+  else{fd.innerHTML=eq.nombre.charAt(0);}
+  document.getElementById('eqd-nom').textContent=eq.nombre;
+  document.getElementById('eqd-grupo').textContent='Grupo '+eq.grupo;
+  var cap=document.getElementById('eqd-cap');if(cap)cap.textContent=eq.capitan?'Capitan: '+eq.capitan:'';
+  var desc=document.getElementById('eqd-desc');if(desc)desc.textContent=eq.desc||'';
+  var st=calcSt(eq.nombre);
+  document.getElementById('eqd-stats').innerHTML='<div class="edst"><div class="edst-n">'+st.pj+'</div><div class="edst-l">PJ</div></div><div class="edst"><div class="edst-n">'+st.v+'</div><div class="edst-l">V</div></div><div class="edst"><div class="edst-n">'+st.e+'</div><div class="edst-l">E</div></div><div class="edst"><div class="edst-n" style="color:var(--lime)">'+st.pts+'</div><div class="edst-l">PTS</div></div>';
+  renderCampo(eq.nombre);
+}
+
+function renderCampo(equipo){
+  S=gs();
+  var jugs=[];for(var i=0;i<S.jugadores.length;i++){if(S.jugadores[i].equipo===equipo)jugs.push(S.jugadores[i]);}
+  var titulares=[];var suplentes=[];
+  for(var i=0;i<jugs.length;i++){if(jugs[i].rol==='suplente'){suplentes.push(jugs[i]);}else{if(titulares.length<7)titulares.push(jugs[i]);else suplentes.push(jugs[i]);}}
+  var campoEl=document.getElementById('campo-jugs');
+  var supsEl=document.getElementById('sups-list');
+  var jugByPos={};
+  for(var k=0;k<POS_ORDER.length;k++){jugByPos[POS_ORDER[k]]=[];}
+  for(var i=0;i<titulares.length;i++){var pos=titulares[i].posicion||'Delantero';if(!jugByPos[pos])jugByPos[pos]=[];jugByPos[pos].push(titulares[i]);}
+  var html='';
+  for(var p=0;p<POS_ORDER.length;p++){
+    var pos=POS_ORDER[p];
+    var jpos=jugByPos[pos]||[];
+    var coords=POS_COORDS[pos]||[];
+    for(var j=0;j<jpos.length;j++){
+      var jug=jpos[j];
+      var c=coords[j]||{x:50,y:50};
+      var numH=jug.numero?('<div class="cj-num">'+jug.numero+'</div>'):'';
+      var avH=jug.foto?('<img src="'+jug.foto+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">'):jug.nombre.charAt(0);
+      var nom=jug.nombre.split(' ')[0];
+      html+='<div class="cj" style="left:'+c.x+'%;top:'+c.y+'%" onclick="abrirFifa(\''+jug.nombre.replace(/'/g,"\\'")+'\',\''+jug.equipo.replace(/'/g,"\\'")+'\')"><div style="position:relative">'+numH+'<div class="cj-av">'+avH+'</div></div><div class="cj-nom">'+nom+'</div></div>';
+    }
+  }
+  campoEl.innerHTML=html;
+  if(!suplentes.length&&!jugs.length){supsEl.innerHTML='<div style="padding:14px;color:var(--muted);font-size:13px">Sin jugadores registrados</div>';return;}
+  var shtml='';
+  for(var i=0;i<suplentes.length;i++){
+    var j=suplentes[i];
+    var avH=j.foto?('<img src="'+j.foto+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">'):j.nombre.charAt(0);
+    shtml+='<div class="sup-row" onclick="abrirFifa(\''+j.nombre.replace(/'/g,"\\'")+'\',\''+j.equipo.replace(/'/g,"\\'")+'\')"><div class="sup-av">'+avH+'</div><div class="sup-info"><div class="sup-nom">'+j.nombre+'</div><div class="sup-pos">'+(j.posicion||'JUG')+' #'+(j.numero||'-')+'</div></div></div>';
+  }
+  supsEl.innerHTML=shtml||'<div style="padding:14px;color:var(--muted);font-size:13px">Sin suplentes</div>';
+}
+
+/* TABLA */
+function calcSt(nombre){
+  var pts=[];for(var i=0;i<S.partidos.length;i++){var p=S.partidos[i];if(p.est==='done'&&(p.local===nombre||p.visita===nombre))pts.push(p);}
+  var v=0,e=0,d=0,gf=0,gc=0;
+  for(var i=0;i<pts.length;i++){var p=pts[i];var loc=p.local===nombre;var mg=loc?parseInt(p.gl)||0:parseInt(p.gv)||0;var mg2=loc?parseInt(p.gv)||0:parseInt(p.gl)||0;gf+=mg;gc+=mg2;if(mg>mg2)v++;else if(mg===mg2)e++;else d++;}
+  return{pj:pts.length,v:v,e:e,d:d,gf:gf,gc:gc,pts:v*3+e};
+}
+
+function renderTabla(g){
+  S=gs();
+  var eqs=[];for(var i=0;i<S.equipos.length;i++){if(S.equipos[i].grupo===g)eqs.push(S.equipos[i]);}
+  var cont=document.getElementById('tabla-cont');
+  if(!eqs.length){cont.innerHTML='<div class="empty">SIN EQUIPOS EN ESTE GRUPO</div>';return;}
+  var rows=[];for(var i=0;i<eqs.length;i++){var st=calcSt(eqs[i].nombre);rows.push({nombre:eqs[i].nombre,pj:st.pj,v:st.v,e:st.e,d:st.d,gf:st.gf,gc:st.gc,pts:st.pts});}
+  rows.sort(function(a,b){return b.pts-a.pts||(b.gf-b.gc)-(a.gf-a.gc)||b.gf-a.gf;});
+  var html='<table class="tabla"><thead><tr><th style="width:30px">#</th><th>Equipo</th><th class="c">PJ</th><th class="c">V</th><th class="c">E</th><th class="c">D</th><th class="c">GF</th><th class="c">GC</th><th class="c">DG</th><th class="c">PTS</th></tr></thead><tbody>';
+  for(var i=0;i<rows.length;i++){
+    var r=rows[i];var dg=r.gf-r.gc;var dgstr=(dg>0?'+':'')+dg;
+    var dgcol=dg>0?'var(--lime)':dg<0?'var(--orange)':'var(--muted)';
+    html+='<tr class="'+(i<2?'top2':'')+'"><td><div class="t-pos '+(i<2?'top':'')+'">'+(i+1)+'</div></td><td><div class="t-name">'+r.nombre+'</div></td><td class="c">'+r.pj+'</td><td class="c">'+r.v+'</td><td class="c">'+r.e+'</td><td class="c">'+r.d+'</td><td class="c">'+r.gf+'</td><td class="c">'+r.gc+'</td><td class="c" style="color:'+dgcol+'">'+dgstr+'</td><td class="c"><div class="t-pts">'+r.pts+'</div></td></tr>';
+  }
+  html+='</tbody></table>';
+  cont.innerHTML=html;
+}
+
+function showGrupo(g,btn){
+  document.querySelectorAll('#pg-tabla .gtab').forEach(function(b){b.classList.remove('act');});
+  btn.classList.add('act');renderTabla(g);
+}
+
+/* GOLEADORES */
+function renderGoles(){
+  S=gs();
+  var gols=[].concat(S.goleadores);
+  gols.sort(function(a,b){return b.goles-a.goles;});
+  var list=document.getElementById('gol-list');
+  if(!gols.length){list.innerHTML='<div class="empty">SIN GOLES REGISTRADOS</div>';return;}
+  var html='';
+  for(var i=0;i<gols.length;i++){
+    var g=gols[i];
+    var jug=null;for(var j=0;j<S.jugadores.length;j++){if(S.jugadores[j].nombre===g.jugador&&S.jugadores[j].equipo===g.equipo){jug=S.jugadores[j];break;}}
+    var avH=jug&&jug.foto?('<img src="'+jug.foto+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">'):g.jugador.charAt(0);
+    html+='<div class="gol-row"><div class="gol-rank '+(i<3?'top':'')+'">'+(i+1)+'</div><div class="gol-av">'+avH+'</div><div class="gol-info"><div class="gol-nom">'+g.jugador+'</div><div class="gol-eq">'+g.equipo+'</div></div><div class="gol-n">'+g.goles+'</div><div class="gol-lab">goles</div></div>';
+  }
+  list.innerHTML=html;
+}
+
+/* FIFA */
+var STATS_POS={Portero:['REF','POS','SAQ','COR','MAN','FIS'],Defensa:['DEF','PAS','FIS','RIT','INT','COR'],Lateral:['RIT','PAS','DEF','CRU','FIS','INT'],Mediocampo:['PAS','REG','TIR','RIT','DEF','FIS'],Delantero:['RIT','TIR','PAS','REG','DEF','FIS'],dflt:['RIT','TIR','PAS','REG','DEF','FIS']};
+var curJug=null;
+
+function abrirFifa(nombre,equipo){
+  S=gs();
+  var j=null;for(var i=0;i<S.jugadores.length;i++){if(S.jugadores[i].nombre===nombre&&S.jugadores[i].equipo===equipo){j=S.jugadores[i];break;}}
+  if(!j)return;
+  curJug=j;
+  var labels=STATS_POS[j.posicion]||STATS_POS.dflt;
+  var stats=j.stats||[70,70,70,70,70,70];
+  var sum=0;for(var i=0;i<stats.length;i++)sum+=stats[i];
+  var overall=Math.round(sum/stats.length);
+  var fotoH=j.foto?('<img src="'+j.foto+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">'):('<span style="font-family:\'Bebas Neue\',sans-serif;font-size:32px;color:rgba(200,241,53,.14)">'+j.nombre.charAt(0)+'</span>');
+  var statsH='';
+  for(var i=0;i<labels.length;i++){statsH+='<div class="fc-stat-row"><div class="fc-sl">'+labels[i]+'</div><div class="fc-bar"><div class="fc-fill" style="width:'+(stats[i]||0)+'%"></div></div><div class="fc-val">'+(stats[i]||0)+'</div></div>';}
+  document.getElementById('fifa-render').innerHTML='<div class="fifa-card" id="fifa-card-el"><div class="fc-flag">&#127466;&#127464;</div><div class="fc-ov">'+overall+'</div><div class="fc-pos">'+(j.posicion||'JUG').toUpperCase()+'</div><div class="fc-foto">'+fotoH+'</div><div class="fc-nom">'+j.nombre.toUpperCase()+'</div><div class="fc-club">'+j.equipo+' | KOPA FC 2026</div><div class="fc-stats">'+statsH+'</div></div>';
+  document.getElementById('fifa-ov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function cerrarFifa(){document.getElementById('fifa-ov').classList.remove('open');document.body.style.overflow='';}
+
+function descargarFifa(){
+  var card=document.getElementById('fifa-card-el');
+  if(!card)return;
+  var nom=curJug?curJug.nombre:'jugador';
+  if(typeof html2canvas!=='undefined'){
+    html2canvas(card,{backgroundColor:'#0d1800',scale:3,useCORS:true,logging:false}).then(function(canvas){
+      var a=document.createElement('a');
+      a.download='KOPA-FC-'+nom.replace(/\s+/g,'-')+'-2026.png';
+      a.href=canvas.toDataURL('image/png');a.click();
+    });
+  } else {alert('Para descargar, toma un screenshot de la ficha.');}
+}
+
+function compartirFifa(){
+  var nom=curJug?curJug.nombre:'jugador';
+  if(navigator.share){navigator.share({title:'Ficha KOPA FC 2026 - '+nom,text:'Mi ficha de jugador en KOPA FC 2026! @kopafutbol',url:window.location.href}).catch(function(){});}
+  else{try{navigator.clipboard.writeText(window.location.href).then(function(){alert('Link copiado!');});}catch(e){alert('Comparte esta pagina: '+window.location.href);}}
+}
+
+/* ADMIN AUTH */
+function tryLogin(){
+  S=gs();
+  var pw=document.getElementById('login-pw').value;
+  if(pw===S.pw){S.loggedIn=true;ss(S);showPanel();}
+  else{document.getElementById('login-al').innerHTML='<div class="al a-err">Contrasena incorrecta</div>';}
+}
+function doLogout(){S=gs();S.loggedIn=false;ss(S);document.getElementById('adm-panel').style.display='none';document.getElementById('adm-login').style.display='flex';document.getElementById('login-pw').value='';}
+function showPanel(){
+  document.getElementById('adm-login').style.display='none';
+  document.getElementById('adm-panel').style.display='block';
+  fillSelects();renderAdmEq();renderAdmJugs();renderAdmParts();renderAdmGols();syncEVform();
+}
+function aTab(t,btn){
+  document.querySelectorAll('.atab').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.asec').forEach(function(s){s.classList.remove('act');});
+  btn.classList.add('act');document.getElementById('asec-'+t).classList.add('act');
+}
+
+/* EN VIVO ADMIN */
+var cronoTimer=null,cronoSecs=0,cronoRunning=false;
+function cronoTick(){cronoSecs++;var m=Math.floor(cronoSecs/60);document.getElementById('crono-big').textContent=String(m).padStart(2,'0')+"'";document.getElementById('ev-min').value=m;}
+function cronoStart(){if(cronoRunning)return;cronoRunning=true;cronoTimer=setInterval(cronoTick,1000);}
+function cronoPause(){cronoRunning=false;clearInterval(cronoTimer);}
+function cronoReset(){cronoPause();cronoSecs=0;document.getElementById('crono-big').textContent="00'";document.getElementById('ev-min').value=0;}
+function cronoAdd(m){cronoSecs=m*60;document.getElementById('crono-big').textContent=String(m).padStart(2,'0')+"'";document.getElementById('ev-min').value=m;}
+function syncCrono(){var m=parseInt(document.getElementById('ev-min').value)||0;document.getElementById('crono-big').textContent=String(m).padStart(2,'0')+"'";}
+function syncPill(){var v=document.getElementById('ev-est').value;document.getElementById('nav-live').style.display=v!=='off'?'flex':'none';}
+function syncEVform(){S=gs();var ev=S.envivo||{};document.getElementById('ev-est').value=ev.est||'off';document.getElementById('ev-loc').value=ev.local||'';document.getElementById('ev-vis').value=ev.visita||'';document.getElementById('ev-gl').value=ev.gl||0;document.getElementById('ev-gv').value=ev.gv||0;document.getElementById('ev-min').value=ev.min||0;document.getElementById('ev-fase').value=ev.fase||'';document.getElementById('crono-big').textContent=String(ev.min||0).padStart(2,'0')+"'";}
+function guardarEV(){
+  S=gs();
+  S.envivo={est:document.getElementById('ev-est').value,local:document.getElementById('ev-loc').value,visita:document.getElementById('ev-vis').value,gl:parseInt(document.getElementById('ev-gl').value)||0,gv:parseInt(document.getElementById('ev-gv').value)||0,min:parseInt(document.getElementById('ev-min').value)||0,fase:document.getElementById('ev-fase').value};
+  ss(S);showAlert('gadm-al','Marcador publicado!','ok');
+}
+
+/* EQUIPOS ADMIN */
+function prevEqFoto(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){document.getElementById('eq-fp').style.display='block';document.getElementById('eq-fpimg').src=e.target.result;document.getElementById('eq-foto').value='';};r.readAsDataURL(f);}
+function guardarEq(){
+  S=gs();var nom=document.getElementById('eq-nom').value.trim();
+  if(!nom){showAlert('eqf-al','Nombre requerido','err');return;}
+  var eid=document.getElementById('eq-eid').value;
+  if(!eid&&S.equipos.length>=16){showAlert('eqf-al','Maximo 16 equipos','err');return;}
+  var furl=document.getElementById('eq-foto').value.trim();
+  var fprev=document.getElementById('eq-fpimg').src;
+  var foto=furl||(document.getElementById('eq-ffile').files[0]?fprev:'');
+  var eq={nombre:nom,grupo:document.getElementById('eq-gru').value,capitan:document.getElementById('eq-cap').value.trim(),desc:document.getElementById('eq-desc').value.trim(),foto:foto||null};
+  if(eid){for(var i=0;i<S.equipos.length;i++){if(S.equipos[i].nombre===eid){for(var k in eq)S.equipos[i][k]=eq[k];break;}}}
+  else{for(var i=0;i<S.equipos.length;i++){if(S.equipos[i].nombre===nom){showAlert('eqf-al','Nombre ya existe','err');return;}}S.equipos.push(eq);}
+  ss(S);showAlert('eqf-al','Equipo guardado','ok');resetEq();renderAdmEq();fillSelects();
+}
+function resetEq(){document.getElementById('eq-eid').value='';document.getElementById('eq-nom').value='';document.getElementById('eq-cap').value='';document.getElementById('eq-desc').value='';document.getElementById('eq-foto').value='';document.getElementById('eq-ffile').value='';document.getElementById('eq-fp').style.display='none';document.getElementById('eqf-t').textContent='Agregar equipo';}
+function editEq(nom){
+  S=gs();var eq=null;for(var i=0;i<S.equipos.length;i++){if(S.equipos[i].nombre===nom){eq=S.equipos[i];break;}}if(!eq)return;
+  document.getElementById('eq-eid').value=nom;document.getElementById('eq-nom').value=eq.nombre;document.getElementById('eq-gru').value=eq.grupo;document.getElementById('eq-cap').value=eq.capitan||'';document.getElementById('eq-desc').value=eq.desc||'';document.getElementById('eq-foto').value=eq.foto||'';
+  if(eq.foto){document.getElementById('eq-fp').style.display='block';document.getElementById('eq-fpimg').src=eq.foto;}
+  document.getElementById('eqf-t').textContent='Editar: '+nom;
+}
+function delEq(nom){if(!confirm('Eliminar "'+nom+'"?'))return;S=gs();var tmp=[];for(var i=0;i<S.equipos.length;i++){if(S.equipos[i].nombre!==nom)tmp.push(S.equipos[i]);}S.equipos=tmp;ss(S);renderAdmEq();fillSelects();}
+function renderAdmEq(){
+  S=gs();var el=document.getElementById('eq-cnt');if(el)el.textContent=S.equipos.length;
+  var c=document.getElementById('adm-eq-list');if(!S.equipos.length){c.innerHTML='<div style="padding:12px;color:var(--muted);font-size:13px">Sin equipos</div>';return;}
+  var html='';
+  for(var i=0;i<S.equipos.length;i++){var e=S.equipos[i];html+='<div class="arow"><div class="ar-av">'+(e.foto?'<img src="'+e.foto+'" onerror="this.style.display=\'none\'" style="width:100%;height:100%;object-fit:cover">':e.nombre.charAt(0))+'</div><div class="ar-info"><div class="ar-name">'+e.nombre+'</div><div class="ar-meta">Grupo '+e.grupo+'</div></div><button class="abtn-e" onclick="editEq(\''+e.nombre.replace(/'/g,"\\'")+'\')">Editar</button><button class="abtn-d" onclick="delEq(\''+e.nombre.replace(/'/g,"\\'")+'\')">x</button></div>';}
+  c.innerHTML=html;
+}
+
+/* JUGADORES ADMIN */
+var STAT_LBL={Portero:['REF','POS','SAQ','COR','MAN','FIS'],Defensa:['DEF','PAS','FIS','RIT','INT','COR'],Lateral:['RIT','PAS','DEF','CRU','FIS','INT'],Mediocampo:['PAS','REG','TIR','RIT','DEF','FIS'],Delantero:['RIT','TIR','PAS','REG','DEF','FIS'],dflt:['RIT','TIR','PAS','REG','DEF','FIS']};
+function adaptStats(){var pos=document.getElementById('jug-pos').value;var labs=STAT_LBL[pos]||STAT_LBL.dflt;for(var i=0;i<labs.length;i++){var el=document.getElementById('sl'+i);if(el)el.textContent=labs[i];}}
+function prevJugFoto(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){document.getElementById('jug-fp').style.display='block';document.getElementById('jug-fpimg').src=e.target.result;document.getElementById('jug-foto').value='';};r.readAsDataURL(f);}
+function guardarJug(){
+  S=gs();var nom=document.getElementById('jug-nom').value.trim();var eq=document.getElementById('jug-eq').value;
+  if(!nom||!eq){showAlert('jugf-al','Nombre y equipo requeridos','err');return;}
+  var jid=document.getElementById('jug-jid').value;
+  var furl=document.getElementById('jug-foto').value.trim();
+  var fprev=document.getElementById('jug-fpimg').src;
+  var foto=furl||(document.getElementById('jug-ffile').files[0]?fprev:'');
+  var stats=[];for(var i=0;i<6;i++){stats.push(parseInt(document.getElementById('s'+i).value)||70);}
+  var jug={nombre:nom,equipo:eq,posicion:document.getElementById('jug-pos').value,rol:document.getElementById('jug-rol').value,numero:document.getElementById('jug-num').value,foto:foto||null,stats:stats};
+  if(jid){for(var i=0;i<S.jugadores.length;i++){if(S.jugadores[i]._id===jid){for(var k in jug)S.jugadores[i][k]=jug[k];break;}}}
+  else{jug._id=Date.now().toString();S.jugadores.push(jug);}
+  ss(S);showAlert('jugf-al','Jugador guardado','ok');resetJug();renderAdmJugs();
+}
+function resetJug(){document.getElementById('jug-jid').value='';document.getElementById('jug-nom').value='';document.getElementById('jug-num').value='';document.getElementById('jug-foto').value='';document.getElementById('jug-ffile').value='';document.getElementById('jug-fp').style.display='none';for(var i=0;i<6;i++){var el=document.getElementById('s'+i);if(el)el.value=70;}document.getElementById('jugf-t').textContent='Agregar jugador';}
+function editJug(id){
+  S=gs();var j=null;for(var i=0;i<S.jugadores.length;i++){if(S.jugadores[i]._id===id){j=S.jugadores[i];break;}}if(!j)return;
+  document.getElementById('jug-jid').value=id;document.getElementById('jug-nom').value=j.nombre;document.getElementById('jug-eq').value=j.equipo;document.getElementById('jug-pos').value=j.posicion||'Delantero';document.getElementById('jug-rol').value=j.rol||'titular';document.getElementById('jug-num').value=j.numero||'';document.getElementById('jug-foto').value=j.foto||'';
+  if(j.foto){document.getElementById('jug-fp').style.display='block';document.getElementById('jug-fpimg').src=j.foto;}
+  var sts=j.stats||[70,70,70,70,70,70];for(var i=0;i<6;i++){var el=document.getElementById('s'+i);if(el)el.value=sts[i];}adaptStats();
+  document.getElementById('jugf-t').textContent='Editar: '+j.nombre;
+}
+function delJug(id){if(!confirm('Eliminar jugador?'))return;S=gs();var tmp=[];for(var i=0;i<S.jugadores.length;i++){if(S.jugadores[i]._id!==id)tmp.push(S.jugadores[i]);}S.jugadores=tmp;ss(S);renderAdmJugs();}
+function renderAdmJugs(){
+  S=gs();var fil=document.getElementById('jug-filtro').value;
+  var jugs=fil?S.jugadores.filter(function(j){return j.equipo===fil;}):S.jugadores;
+  var c=document.getElementById('adm-jug-list');
+  if(!jugs.length){c.innerHTML='<div style="padding:12px;color:var(--muted);font-size:13px">Sin jugadores</div>';return;}
+  var html='';
+  for(var i=0;i<jugs.length;i++){var j=jugs[i];html+='<div class="arow"><div class="ar-av rnd">'+(j.foto?'<img src="'+j.foto+'" onerror="this.style.display=\'none\'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':(j.nombre?j.nombre.charAt(0):'?'))+'</div><div class="ar-info"><div class="ar-name">'+j.nombre+'</div><div class="ar-meta">'+j.equipo+' | '+(j.posicion||'JUG')+' | #'+(j.numero||'-')+' | '+(j.rol||'titular')+'</div></div><button class="abtn-e" onclick="editJug(\''+j._id+'\')">Editar</button><button class="abtn-d" onclick="delJug(\''+j._id+'\')">x</button></div>';}
+  c.innerHTML=html;
+}
+
+/* PARTIDOS ADMIN */
+function addPartido(){
+  S=gs();var loc=document.getElementById('p-loc').value;var vis=document.getElementById('p-vis').value;
+  if(!loc||!vis||loc===vis){showAlert('gadm-al','Selecciona equipos distintos','err');return;}
+  S.partidos.push({id:Date.now(),local:loc,visita:vis,fase:document.getElementById('p-fas').value,hora:document.getElementById('p-hor').value,est:'pend',gl:null,gv:null});
+  ss(S);renderAdmParts();showAlert('gadm-al','Partido agregado','ok');
+}
+function updatePartido(id){
+  S=gs();var idx=-1;for(var i=0;i<S.partidos.length;i++){if(S.partidos[i].id===id){idx=i;break;}}if(idx<0)return;
+  var gl=document.getElementById('gl-'+id).value;var gv=document.getElementById('gv-'+id).value;
+  S.partidos[idx].gl=gl===''?null:parseInt(gl);S.partidos[idx].gv=gv===''?null:parseInt(gv);S.partidos[idx].est=document.getElementById('est-'+id).value;
+  ss(S);showAlert('gadm-al','Resultado guardado','ok');renderAdmParts();
+}
+function delPartido(id){if(!confirm('Eliminar partido?'))return;S=gs();var tmp=[];for(var i=0;i<S.partidos.length;i++){if(S.partidos[i].id!==id)tmp.push(S.partidos[i]);}S.partidos=tmp;ss(S);renderAdmParts();}
+function renderAdmParts(){
+  S=gs();var c=document.getElementById('adm-partidos-list');
+  if(!S.partidos.length){c.innerHTML='<div style="padding:12px;color:var(--muted);font-size:13px">Sin partidos</div>';return;}
+  var html='';
+  for(var i=0;i<S.partidos.length;i++){
+    var p=S.partidos[i];
+    html+='<div class="arow" style="flex-wrap:wrap;gap:7px"><div class="ar-info" style="min-width:150px"><div class="ar-name">'+p.local+' vs '+p.visita+'</div><div class="ar-meta">'+p.fase+' | '+(p.hora||'--:--')+'</div></div>';
+    html+='<div style="display:flex;align-items:center;gap:5px"><input class="sc-in" id="gl-'+p.id+'" type="number" min="0" value="'+(p.gl!==null?p.gl:'')+'"/><span style="font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--muted)">-</span><input class="sc-in" id="gv-'+p.id+'" type="number" min="0" value="'+(p.gv!==null?p.gv:'')+'"/></div>';
+    html+='<select class="fi fs" id="est-'+p.id+'"><option value="pend" '+(p.est==='pend'?'selected':'')+'>Pendiente</option><option value="live" '+(p.est==='live'?'selected':'')+'>En Vivo</option><option value="done" '+(p.est==='done'?'selected':'')+'>Finalizado</option></select>';
+    html+='<button class="btn-p" style="padding:5px 12px;font-size:11px" onclick="updatePartido('+p.id+')">Guardar</button><button class="abtn-d" onclick="delPartido('+p.id+')">x</button></div>';
+  }
+  c.innerHTML=html;
+}
+
+/* GOLES ADMIN */
+function addGol(){
+  S=gs();var jug=document.getElementById('gol-jug').value.trim();var eq=document.getElementById('gol-eq').value;
+  if(!jug||!eq){showAlert('gadm-al','Completa jugador y equipo','err');return;}
+  var idx=-1;for(var i=0;i<S.goleadores.length;i++){if(S.goleadores[i].jugador===jug&&S.goleadores[i].equipo===eq){idx=i;break;}}
+  if(idx>=0)S.goleadores[idx].goles++;else S.goleadores.push({jugador:jug,equipo:eq,goles:1});
+  ss(S);renderAdmGols();showAlert('gadm-al','+1 gol para '+jug,'ok');document.getElementById('gol-jug').value='';
+}
+function addGolD(jug,eq){
+  S=gs();for(var i=0;i<S.goleadores.length;i++){if(S.goleadores[i].jugador===jug&&S.goleadores[i].equipo===eq){S.goleadores[i].goles++;break;}}ss(S);renderAdmGols();
+}
+function quitarGol(jug,eq){
+  S=gs();var idx=-1;for(var i=0;i<S.goleadores.length;i++){if(S.goleadores[i].jugador===jug&&S.goleadores[i].equipo===eq){idx=i;break;}}
+  if(idx<0)return;S.goleadores[idx].goles--;if(S.goleadores[idx].goles<=0)S.goleadores.splice(idx,1);ss(S);renderAdmGols();
+}
+function renderAdmGols(){
+  S=gs();var c=document.getElementById('adm-gol-list');
+  var gols=[].concat(S.goleadores);gols.sort(function(a,b){return b.goles-a.goles;});
+  if(!gols.length){c.innerHTML='<div style="padding:12px;color:var(--muted);font-size:13px">Sin goles</div>';return;}
+  var html='';
+  for(var i=0;i<gols.length;i++){var g=gols[i];html+='<div class="arow"><div class="ar-info"><div class="ar-name">'+g.jugador+'</div><div class="ar-meta">'+g.equipo+'</div></div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:24px;color:var(--lime);margin:0 9px">'+g.goles+'</div><button class="abtn-e" onclick="addGolD(\''+g.jugador.replace(/'/g,"\\'")+'\',\''+g.equipo.replace(/'/g,"\\'")+'\')">+1</button><button class="abtn-d" onclick="quitarGol(\''+g.jugador.replace(/'/g,"\\'")+'\',\''+g.equipo.replace(/'/g,"\\'")+'\')">-1</button></div>';}
+  c.innerHTML=html;
+}
+
+/* CONFIG */
+function guardarCfg(){
+  S=gs();
+  var wa=document.getElementById('cfg-wa').value;if(wa)S.cfg.wa=wa;
+  var nom=document.getElementById('cfg-nom').value;if(nom)S.cfg.nom=nom;
+  var pre=document.getElementById('cfg-pre').value;if(pre)S.cfg.pre=pre;
+  var pw=document.getElementById('cfg-pw').value;if(pw)S.pw=pw;
+  ss(S);showAlert('gadm-al','Configuracion guardada','ok');updateWa();
+}
+function resetTodo(){if(!confirm('BORRAR TODOS LOS DATOS?'))return;if(!confirm('Confirma: se borrara todo'))return;localStorage.removeItem('kopa26');location.reload();}
+
+function fillSelects(){
+  S=gs();
+  var opts='';for(var i=0;i<S.equipos.length;i++){opts+='<option value="'+S.equipos[i].nombre+'">'+S.equipos[i].nombre+'</option>';}
+  var def=opts||'<option value="">Sin equipos</option>';
+  var ids=['ev-loc','ev-vis','p-loc','p-vis','gol-eq','jug-eq'];
+  for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el)el.innerHTML=def;}
+  var jf=document.getElementById('jug-filtro');if(jf)jf.innerHTML='<option value="">Todos</option>'+opts;
+}
+
+function showAlert(id,msg,type){var el=document.getElementById(id);if(!el)return;el.innerHTML='<div class="al a-'+type+'">'+msg+'</div>';setTimeout(function(){el.innerHTML='';},3200);}
+
+setInterval(function(){if(document.getElementById('pg-home').classList.contains('act')){S=gs();renderEV();renderTicker();}},15000);
+
+renderHome();
+</script>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="site-footer">
+
+  <!-- PATROCINADORES -->
+  <div class="footer-sponsors">
+    <div class="footer-sponsors-ey">Gracias a nuestros</div>
+    <div class="footer-sponsors-h">PATROCINADORES</div>
+    <div class="sponsors-grid">
+
+      <!-- PATROCINADOR 1 — Reemplaza src con el logo real -->
+      <div class="sponsor-slot">
+        <img src="" alt="Patrocinador 1" id="sponsor-img-1"
+          onerror="this.style.display='none';document.getElementById('sponsor-ph-1').style.display='flex'"
+          style="display:none"/>
+        <div class="sponsor-slot-placeholder" id="sponsor-ph-1">
+          <div class="sponsor-placeholder-icon">🏢</div>
+          <div class="sponsor-placeholder-txt">Logo patrocinador<br>1</div>
+        </div>
+      </div>
+
+      <!-- PATROCINADOR 2 -->
+      <div class="sponsor-slot">
+        <img src="" alt="Patrocinador 2" id="sponsor-img-2"
+          onerror="this.style.display='none';document.getElementById('sponsor-ph-2').style.display='flex'"
+          style="display:none"/>
+        <div class="sponsor-slot-placeholder" id="sponsor-ph-2">
+          <div class="sponsor-placeholder-icon">🏢</div>
+          <div class="sponsor-placeholder-txt">Logo patrocinador<br>2</div>
+        </div>
+      </div>
+
+      <!-- PATROCINADOR 3 -->
+      <div class="sponsor-slot">
+        <img src="" alt="Patrocinador 3" id="sponsor-img-3"
+          onerror="this.style.display='none';document.getElementById('sponsor-ph-3').style.display='flex'"
+          style="display:none"/>
+        <div class="sponsor-slot-placeholder" id="sponsor-ph-3">
+          <div class="sponsor-placeholder-icon">🏢</div>
+          <div class="sponsor-placeholder-txt">Logo patrocinador<br>3</div>
+        </div>
+      </div>
+
+      <!-- PATROCINADOR 4 -->
+      <div class="sponsor-slot">
+        <img src="" alt="Patrocinador 4" id="sponsor-img-4"
+          onerror="this.style.display='none';document.getElementById('sponsor-ph-4').style.display='flex'"
+          style="display:none"/>
+        <div class="sponsor-slot-placeholder" id="sponsor-ph-4">
+          <div class="sponsor-placeholder-icon">🏢</div>
+          <div class="sponsor-placeholder-txt">Logo patrocinador<br>4</div>
+        </div>
+      </div>
+
+      <!-- PATROCINADOR 5 -->
+      <div class="sponsor-slot">
+        <img src="" alt="Patrocinador 5" id="sponsor-img-5"
+          onerror="this.style.display='none';document.getElementById('sponsor-ph-5').style.display='flex'"
+          style="display:none"/>
+        <div class="sponsor-slot-placeholder" id="sponsor-ph-5">
+          <div class="sponsor-placeholder-icon">🏢</div>
+          <div class="sponsor-placeholder-txt">Logo patrocinador<br>5</div>
+        </div>
+      </div>
+
+      <!-- PATROCINADOR 6 -->
+      <div class="sponsor-slot">
+        <img src="" alt="Patrocinador 6" id="sponsor-img-6"
+          onerror="this.style.display='none';document.getElementById('sponsor-ph-6').style.display='flex'"
+          style="display:none"/>
+        <div class="sponsor-slot-placeholder" id="sponsor-ph-6">
+          <div class="sponsor-placeholder-icon">🏢</div>
+          <div class="sponsor-placeholder-txt">Logo patrocinador<br>6</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-divider"></div>
+
+  <!-- BOTTOM BAR -->
+  <div class="footer-bottom">
+    <div class="footer-logo" onclick="goTo('home')">KOPA FC®</div>
+    <div class="footer-links">
+      <button class="footer-link" onclick="goTo('home')">Home</button>
+      <button class="footer-link" onclick="goTo('torneo')">Torneo</button>
+      <button class="footer-link" onclick="goTo('equipos')">Equipos</button>
+      <button class="footer-link" onclick="goTo('tabla')">Posiciones</button>
+      <button class="footer-link" onclick="goTo('goleadores')">Goleadores</button>
+    </div>
+    <div class="footer-copy">© 2026 KOPA FC® · Cuenca, Ecuador · @kopafutbol</div>
+  </div>
+
+</footer>
+
+</body>
+</html>
