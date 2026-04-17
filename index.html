@@ -799,11 +799,71 @@ table.tabla{width:100%;border-collapse:collapse;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-var S;
-function gs(){try{return JSON.parse(localStorage.getItem('kopa26'))||ds();}catch(e){return ds();}}
-function ds(){return{pw:'kopa2026',cfg:{wa:'593XXXXXXXXX',nom:'KOPA Relampago #01',pre:'$600'},equipos:[],jugadores:[],partidos:[],goleadores:[],comentarios:[],envivo:{est:'off',local:'',visita:'',gl:0,gv:0,min:0,fase:''},loggedIn:false};}
-function ss(d){localStorage.setItem('kopa26',JSON.stringify(d));}
-S=gs();
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD88WcCK930e0GFA22wW-Llwygfh4aePyk",
+    authDomain: "kopacuenca.firebaseapp.com",
+    projectId: "kopacuenca",
+    storageBucket: "kopacuenca.firebasestorage.app",
+    messagingSenderId: "16071456356",
+    appId: "1:16071456356:web:2c2dd430fcd91b41029171"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const REF = doc(db, "kopa", "estado");
+
+  // Estado inicial por si la base de datos está vacía
+  function ds() {
+    return {
+      pw:'kopa2026',
+      cfg:{wa:'593984180424',nom:'KOPA Relampago #01',pre:'$600'},
+      equipos:[],jugadores:[],partidos:[],goleadores:[],comentarios:[],
+      envivo:{est:'off',local:'',visita:'',gl:0,gv:0,min:0,fase:''},
+      loggedIn:false
+    };
+  }
+
+  // Cargar datos de la nube
+  async function cargarDatos() {
+    try {
+      const snap = await getDoc(REF);
+      window.S = snap.exists() ? snap.data() : ds();
+      console.log("Datos cargados de la nube");
+      if(typeof renderHome === "function") renderHome(); 
+    } catch(e) {
+      window.S = ds();
+      console.error("Error cargando datos:", e);
+    }
+  }
+
+  // Función global para guardar (reemplaza a tu ss antiguo)
+  window.ss = async function(d) {
+    window.S = d;
+    try { 
+      await setDoc(REF, d); 
+      console.log("Guardado en nube exitoso");
+    } catch(e) { 
+      console.error("Error al guardar en nube:", e); 
+    }
+  };
+
+  // Sincronización en tiempo real (Si tú cambias algo, se ve en todos los celulares)
+  onSnapshot(REF, (snap) => {
+    if (snap.exists()) {
+      window.S = snap.data();
+      // Refrescar la vista si la función existe
+      if(typeof renderHome === "function") renderHome();
+    }
+  });
+
+  window.gs = function() { return window.S || ds(); };
+
+  cargarDatos();
+</script>
 
 var PUB=['home','torneo','equipos','tabla','goleadores'];
 function goTo(id){
