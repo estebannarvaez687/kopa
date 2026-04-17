@@ -1417,6 +1417,25 @@ renderHome();
   </div>
 
 </footer>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
+  // Tu configuración de Firebase que copiaste
+  const firebaseConfig = {
+    apiKey: "AIzaSyD88WcCK930e0GFA22wW-Llwygfh4aePyk",
+    authDomain: "kopacuenca.firebaseapp.com",
+    projectId: "kopacuenca",
+    storageBucket: "kopacuenca.firebasestorage.app",
+    messagingSenderId: "16071456356",
+    appId: "1:16071456356:web:2c2dd430fcd91b41029171"
+  };
+
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  console.log("¡Firebase conectado exitosamente!");
+</script>
 </body>
 </html>
