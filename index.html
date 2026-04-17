@@ -1421,7 +1421,6 @@ renderHome();
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
   import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
-  // Tu configuración de Firebase que copiaste
   const firebaseConfig = {
     apiKey: "AIzaSyD88WcCK930e0GFA22wW-Llwygfh4aePyk",
     authDomain: "kopacuenca.firebaseapp.com",
@@ -1431,11 +1430,31 @@ renderHome();
     appId: "1:16071456356:web:2c2dd430fcd91b41029171"
   };
 
-  // Inicializar Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  console.log("¡Firebase conectado exitosamente!");
+  // Esta función es la que hace la magia
+  window.guardarEquipoKopa = async function() {
+    const nombre = document.getElementById('admin-team-name').value;
+    const iniciales = document.getElementById('admin-team-init').value;
+    const color = document.getElementById('admin-team-color').value;
+
+    if(!nombre) { alert("¡Escribe el nombre del equipo!"); return; }
+
+    try {
+      await addDoc(collection(db, "equipos"), {
+        nombre: nombre,
+        iniciales: iniciales,
+        color: color,
+        fecha: new Date().toISOString()
+      });
+      alert("✅ Equipo '" + nombre + "' guardado en la nube de KOPA");
+      // Limpia el formulario
+      document.getElementById('admin-team-name').value = '';
+    } catch (e) {
+      alert("❌ Error al guardar: " + e.message);
+    }
+  }
 </script>
 </body>
 </html>
