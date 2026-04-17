@@ -799,7 +799,7 @@ table.tabla{width:100%;border-collapse:collapse;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-<script type="module">
+  <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -816,8 +816,8 @@ table.tabla{width:100%;border-collapse:collapse;}
   const db = getFirestore(app);
   const REF = doc(db, "kopa", "estado");
 
-  // Estado inicial por si la base de datos está vacía
-  function ds() {
+  // Si no hay datos, crea el objeto inicial
+  function inicializarEstado() {
     return {
       pw:'kopa2026',
       cfg:{wa:'593984180424',nom:'KOPA Relampago #01',pre:'$600'},
@@ -827,40 +827,33 @@ table.tabla{width:100%;border-collapse:collapse;}
     };
   }
 
-  // Cargar datos de la nube
+  // Cargar datos al iniciar
   async function cargarDatos() {
     try {
       const snap = await getDoc(REF);
-      window.S = snap.exists() ? snap.data() : ds();
-      console.log("Datos cargados de la nube");
-      if(typeof renderHome === "function") renderHome(); 
+      window.S = snap.exists() ? snap.data() : inicializarEstado();
+      if(typeof renderHome === "function") renderHome();
     } catch(e) {
-      window.S = ds();
-      console.error("Error cargando datos:", e);
+      window.S = inicializarEstado();
     }
   }
 
-  // Función global para guardar (reemplaza a tu ss antiguo)
+  // Guardar datos
   window.ss = async function(d) {
     window.S = d;
-    try { 
-      await setDoc(REF, d); 
-      console.log("Guardado en nube exitoso");
-    } catch(e) { 
-      console.error("Error al guardar en nube:", e); 
-    }
+    try { await setDoc(REF, d); } catch(e) { console.error(e); }
   };
 
-  // Sincronización en tiempo real (Si tú cambias algo, se ve en todos los celulares)
+  // Obtener datos
+  window.gs = function() { return window.S || inicializarEstado(); };
+
+  // Tiempo real
   onSnapshot(REF, (snap) => {
     if (snap.exists()) {
       window.S = snap.data();
-      // Refrescar la vista si la función existe
       if(typeof renderHome === "function") renderHome();
     }
   });
-
-  window.gs = function() { return window.S || ds(); };
 
   cargarDatos();
 </script>
