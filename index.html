@@ -815,8 +815,7 @@ table.tabla{width:100%;border-collapse:collapse;}
   const db = getFirestore(app);
   const REF = doc(db, "kopa", "estado");
 
-  // Si no hay datos, crea el objeto inicial
-  function inicializarEstado() {
+  function ds() {
     return {
       pw:'kopa2026',
       cfg:{wa:'593984180424',nom:'KOPA Relampago #01',pre:'$600'},
@@ -825,6 +824,29 @@ table.tabla{width:100%;border-collapse:collapse;}
       loggedIn:false
     };
   }
+
+  window.gs = function() { return window.S || ds(); };
+  window.ss = async function(d) {
+    window.S = d;
+    try { await setDoc(REF, d); } catch(e) { console.error(e); }
+  };
+
+  async function init() {
+    try {
+      const snap = await getDoc(REF);
+      window.S = snap.exists() ? snap.data() : ds();
+      if(typeof renderHome === "function") renderHome();
+    } catch(e) { window.S = ds(); }
+  }
+
+  onSnapshot(REF, (snap) => {
+    if (snap.exists()) {
+      window.S = snap.data();
+      if(typeof renderHome === "function") renderHome();
+    }
+  });
+
+  init();
 </script>
 
 var PUB=['home','torneo','equipos','tabla','goleadores'];
