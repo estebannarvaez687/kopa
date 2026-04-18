@@ -1464,14 +1464,17 @@ setInterval(function(){if(document.getElementById('pg-home').classList.contains(
     <div class="sponsors-grid">
 
       <!-- PATROCINADOR 1 — Reemplaza src con el logo real -->
-     <div class="sponsor-slot">
+   <div class="sponsor-slot" style="display: flex; align-items: center; justify-content: center; height: 160px;">
   <img src="https://cdn.buenplan.com.ec/pictures/785bbe50-3b2b-4aae-8972-fc323b048494.jpeg" 
-       alt="CELERITY" 
+       alt="Patrocinador 2" 
        id="sponsor-img-2"
-       onerror="this.style.display='none';document.getElementById('sponsor-ph-2').style.display='flex'"
-       style="display:block"/>
-  <div class="sponsor-slot-placeholder" id="sponsor-ph-2" style="display:none">
-    <div class="sponsor-placeholder-txt">CELERITY<br>2</div>
+       onload="document.getElementById('sponsor-ph-2').style.display = 'none'"
+       onerror="this.style.display='none'; document.getElementById('sponsor-ph-2').style.display='flex'"
+       style="display: block; width: auto; max-width: 90%; height: auto; max-height: 140px; object-fit: contain; margin: 0 auto; ">
+
+  <div class="sponsor-slot-placeholder" id="sponsor-ph-2">
+    <div class="sponsor-placeholder-icon">🏢</div>
+    <div class="sponsor-placeholder-txt">Logo patrocinador<br>2</div>
   </div>
 </div>
 
