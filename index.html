@@ -435,7 +435,7 @@ table.tabla{width:100%;border-collapse:collapse;}
     <div class="sh">TORNEOS KOPA</div>
     <p class="sp">Todos los torneos del año. Inscríbete y compite.</p>
     <div class="torneos-grid">
-      <div class="t-card" onclick="goTo('torneo')"><span class="badge bo">ACTIVO</span><div class="tc-nom">KOPA RELÁMPAGO #01</div><div class="tc-desc">16 equipos · Fútbol 7 · Un día · $600 al campeón · Mayo 2026.</div><div class="tc-stats"><div><div class="tcs-n">16</div><div class="tcs-l">Equipos</div></div><div><div class="tcs-n">$600</div><div class="tcs-l">Premio</div></div><div><div class="tcs-n">1</div><div class="tcs-l">Día</div></div></div></div>
+      <div class="t-card" onclick="goTo('torneo')"><span class="badge bo">ACTIVO</span><div class="tc-nom">KOPA RELÁMPAGO #01</div><div class="tc-desc">16 equipos · Fútbol 6 · Un día · $600 al campeón · Abril 2026.</div><div class="tc-stats"><div><div class="tcs-n">16</div><div class="tcs-l">Equipos</div></div><div><div class="tcs-n">$600</div><div class="tcs-l">Premio</div></div><div><div class="tcs-n">1</div><div class="tcs-l">Día</div></div></div></div>
       <div class="t-card"><span class="badge bm">PRÓXIMAMENTE</span><div class="tc-nom">KOPA LIGA #01</div><div class="tc-desc">Liga amateur de 8 semanas. Julio–Agosto 2026, Cuenca.</div><div class="tc-stats"><div><div class="tcs-n">16</div><div class="tcs-l">Equipos</div></div><div><div class="tcs-n">8</div><div class="tcs-l">Semanas</div></div></div></div>
       <div class="t-card"><span class="badge bm">PRÓXIMAMENTE</span><div class="tc-nom">GRAN KOPA 2026</div><div class="tc-desc">El torneo premium anual. 32 equipos. Diciembre 2026.</div><div class="tc-stats"><div><div class="tcs-n">32</div><div class="tcs-l">Equipos</div></div><div><div class="tcs-n">2</div><div class="tcs-l">Días</div></div></div></div>
       <div class="t-card"><span class="badge bp">NUEVA CATEGORÍA</span><div class="tc-nom">KOPA FEMENINA #01</div><div class="tc-desc">Primera edición del torneo femenino. Octubre 2026.</div><div class="tc-stats"><div><div class="tcs-n">8</div><div class="tcs-l">Equipos</div></div><div><div class="tcs-n">1</div><div class="tcs-l">Día</div></div></div></div>
@@ -509,7 +509,7 @@ table.tabla{width:100%;border-collapse:collapse;}
 <!-- TORNEO -->
 <div class="page" id="pg-torneo">
   <div class="sec">
-    <div class="ey">KOPA · Mayo 2026</div>
+    <div class="ey">KOPA · Abril 2026</div>
     <div class="sh">TORNEO RELAMPAGO #01</div>
     <p class="sp">16 equipos · Futbol 7 · Un dia · $600 al campeon</p>
     <div class="gtabs" id="torneo-tabs">
@@ -990,7 +990,7 @@ function renderTicker(){
     var items=done.slice(-8);
     for(var i=0;i<2;i++){for(var j=0;j<items.length;j++){html+='<div class="ti">'+items[j].local+' '+items[j].gl+'-'+items[j].gv+' '+items[j].visita+'</div>';}}
   } else {
-    var def=['KOPA FC','Torneo Relampago #01','Mayo 2026 Cuenca','$600 Al Campeon','16 Equipos','@kopafutbol'];
+    var def=['KOPA FC','Torneo Relampago #01','Abril 2026 Cuenca','$600 Al Campeon','16 Equipos','@kopa_cuenca'];
     for(var i=0;i<2;i++){for(var j=0;j<def.length;j++){html+='<div class="ti">'+def[j]+'</div>';}}
   }
   var t=document.getElementById('ticker-t');if(t)t.innerHTML=html;
